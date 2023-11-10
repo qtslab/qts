@@ -1,0 +1,12 @@
+i ← 0
+initialize quantum population Q(0)
+initialize best fitness value b = 0
+while i < MAX GEN do
+    i ← i + 1
+    produce neighborhood Set N by multiple measure Q(i - 1)
+    repair s N and evaluate f(s)
+    update b
+    find the best solution s^b and the worst solution s^w
+    update tabu list T
+    update Q(i)
+end while

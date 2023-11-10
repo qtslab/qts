@@ -1,0 +1,26 @@
+t ← 0
+initialize Q(t)
+initialize the best solution s^b from P (t) by measuring Q(t), repairing and evaluating P(t)
+while t < MAX GEN do
+    t ← t + 1
+    make P(t) with N solutions by measuring Q(t - 1)
+    repair P(t)
+    evaluate P(t)
+    update Q(t) by P(t) // ▷ The difference from QTS
+    select the best solution b from P(t)
+    if b > sb then
+        sb ← b
+    end if
+end while
+
+// Algorithm Update(k)
+
+i ← 0
+index ← sort p(t) with profits by DESC
+while i < N/2 do
+    best ← index[i]
+    worst ← index[N/2 - 1 - i]
+    i ← i + 1
+    Determine \Delta by best and worst in Table I
+    q_k = ()()
+end while
