@@ -1,12 +1,12 @@
 #ifndef PE_QTS_HPP
 #define PE_QTS_HPP
 
+#include "constant.h"
 #include "type.h"
 
-answer_type PE_QTS(question_type question, int max_gen) {
-    std::map<bool, double> answer;
+question_t PE_QTS(question_t question, int max_gen) {
 
-    return answer;
+    return question;
 }
 
 #endif

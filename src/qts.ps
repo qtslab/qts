@@ -10,3 +10,16 @@ while i < MAX GEN do
     update tabu list T
     update Q(i)
 end while
+
+i←0
+初始化量子總體 Q(0) // 問題本身(question_type)
+初始化最佳適應度值 b = 0
+當我 < MAX GEN 時
+     i = i + 1
+     透過多重測度 Q(i - 1) 產生鄰居解 N
+     修復 s N 並評估 f(s)
+     更新 b
+     找到最好的解決方案 s^b 和最差的解決方案 s^w
+     更新禁忌列表T
+     更新 Q(i)
+結束迴圈

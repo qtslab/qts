@@ -10,6 +10,28 @@ conponents: C, N, w, v
 價值為 `v[i]`，
 請問最多能裝多少價值的物品？
 
+題目：
+    物品： q
+        重量 weight
+        價值 value
+    背包：
+        最大重量 capacity C
+    問題：
+        最大價值 b
+
+QTS：
+    量子位元陣列： Q(0), Q(1), ..., Q(N-1)
+        量子位元： q
+            量子態： alpha, beta
+
 ## QTS
 
 conponents: MAX_GEN, Q(0), Q(1), ..., Q(MAX_GEN), tabu list T
+
+## 比較
+
+|        | QTS | PE-QTS |
+| ------ | --- | ------ |
+| time   |||
+| space  |||
+| answer |||
