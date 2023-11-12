@@ -30,8 +30,20 @@ conponents: MAX_GEN, Q(0), Q(1), ..., Q(MAX_GEN), tabu list T
 
 ## 比較
 
-|        | QTS | PE-QTS |
-| ------ | --- | ------ |
-| time   |||
-| space  |||
-| answer |||
+| CASE I    | QTS | PE-QTS |
+| --------- | --- | ------ |
+| time      |||
+| space     |||
+| answer    |||
+
+| CASE II   | QTS | PE-QTS |
+| --------- | --- | ------ |
+| time      |||
+| space     |||
+| answer    |||
+
+| CASE III  | QTS | PE-QTS |
+| --------- | --- | ------ |
+| time      |||
+| space     |||
+| answer    |||

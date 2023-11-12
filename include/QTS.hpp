@@ -34,14 +34,12 @@ question_t QTS(question_t question, int max_gen) {
 
     question_t answer;
 
+    // get answer from question
     for (auto i : question) {
         std::random_device rd;  // 取得隨機數種子
         std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
-
         std::uniform_real_distribution<double> dis(0.0, 1.0);
-
         double rand_observation = dis(gen); // 生成隨機數
-
         qubit q;
         if (rand_observation < i.alpha) {
             q.take = true;
