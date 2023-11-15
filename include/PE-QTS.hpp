@@ -4,7 +4,7 @@
 #include "constant.h"
 #include "type.h"
 
-int PE_QTS(question_t question, int max_gen) {
+int PE_QTS(question_t question, double capacity, int max_gen) {
 
     return 0;
 }

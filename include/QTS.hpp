@@ -3,13 +3,15 @@
 
 #include <map>
 #include <random>
+#include <Eigen/Dense>
+#include <armadillo>
 
 #include "constant.h"
 #include "type.h"
 
-#include <quantum_function.h>
+#include "quantum_function.h"
 
-int QTS(question_t question, int max_gen) {
+int QTS(question_t question, double capacity, int max_gen) {
     int n = 10;
 
     // Initialize the best solution sb from P(t) by measuring Q(t), repairing and evaluating P(t)
@@ -23,11 +25,14 @@ int QTS(question_t question, int max_gen) {
     // }
 
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
-        
+        // neighbours = gen_nbrs(qindividuals, N)
+        // neighbours = adjust_neighbours(neighbours, C)
+        // (best_solution, worst_solution) = find_best_worst(neighbours)
+        // best_fit = new_best_fit(best_solution, best_fit)
+        // qindividuals = updateQ(best_solution, worst_solution, qindividuals)
     }
 
     question_t answer;
-
     // get answer from question
     for (int i=0; i<question_size; i++) {
         std::random_device rd;  // 取得隨機數種子

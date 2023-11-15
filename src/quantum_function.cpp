@@ -8,26 +8,32 @@ inline double calculate_weights(question_t question, solution_t solution) {
 }
 
 inline double measure(qubit q) {
+
     return 0;
 }
 
 inline void gen_neighbours(int index, int items_size) {
+    
     return ;
 }
 
 void adjust_solution(solution_t solution, int capacity) {
+    
     return ;
 }
 
 inline void aujust_neighbours(solution_t solution, int capacity) {
+    
     return ;
 }
 
 inline void new_best_fit(solution_t solution, int capacity) {
+
     return ;
 }
 
 inline void find_best_worst(solution_t neighbours) {
+    
     return ;
 }
 
