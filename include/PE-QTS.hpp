@@ -4,9 +4,9 @@
 #include "constant.h"
 #include "type.h"
 
-question_t PE_QTS(question_t question, int max_gen) {
+int PE_QTS(question_t question, int max_gen) {
 
-    return question;
+    return 0;
 }
 
 #endif

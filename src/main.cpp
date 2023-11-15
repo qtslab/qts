@@ -6,7 +6,6 @@
 #include "constant.h"
 #include "type.h"
 
-#include "question_gen.hpp"
 #include "QTS.hpp"
 #include "PE-QTS.hpp"
 
@@ -26,9 +25,9 @@ int print_answer(question_t answer) {
 
     // print value of the answer
     double value = 0;
-    for (auto itr = answer.begin(); itr != answer.end(); ++itr) {
-        if (itr->take) {
-            value += itr->value;
+    for (int i=0; i<question_size; i++) {
+        if (answer[i].take) {
+            value += answer[i].value;
         }
     }
 
@@ -38,28 +37,36 @@ int print_answer(question_t answer) {
 }
 
 int main(int argc, char* argv[]) {
-    question_t question = question_gen(question_size);
+    // generate question
+    question_t question;
 
+    for (int i=0; i<question_size; i++) {
+        question[i].value = min_value + (max_value - min_value) * (double)rand() / RAND_MAX;
+        question[i].weight = min_weight + (max_weight - min_weight) * (double)rand() / RAND_MAX;
+        question[i].alpha = default_alpha;
+        question[i].beta = default_beta;
+        question[i].take = false;
+    }
+
+    // print question
     std::cout << "Question: " << std::endl;
-    for (auto itr = question.begin(); itr != question.end(); ++itr) {
-        std::cout << itr->weight << " " << itr->value << std::endl;
+    for (int i=0; i<question_size; i++) {
+        std::cout << question[i].weight << " " << question[i].value << std::endl;
     }
 
     std::cout << std::endl << "Max generation: " << max_gen << std::endl << std::endl;
 
-    question_t answer(question_size);
+    question_t answer;
 
     std::cout << "QTS: " << std::endl;
     auto QTS_start = std::chrono::high_resolution_clock::now();
-    answer = QTS(question, max_gen);
+    QTS(question, max_gen);
     auto QTS_end = std::chrono::high_resolution_clock::now();
-    print_answer(answer);
 
     std::cout << "PE-QTS: " << std::endl;
     auto PE_QTS_start = std::chrono::high_resolution_clock::now();
-    answer = PE_QTS(question, max_gen);
+    PE_QTS(question, max_gen);
     auto PE_QTS_end = std::chrono::high_resolution_clock::now();
-    print_answer(answer);
 
     std::cout << "QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(QTS_end - QTS_start).count() << "ns" << std::endl;
     std::cout << "PE-QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(PE_QTS_end - PE_QTS_start).count() << "ns" << std::endl;

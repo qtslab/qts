@@ -4,6 +4,9 @@
 #include <map>
 #include <math.h>
 #include <unordered_set>
+
+#include "constant.h"
+
 struct qubit {
     double value = 0;
     double weight = 0;
@@ -12,7 +15,7 @@ struct qubit {
     bool take = false;
 };
 
-using question_t = std::vector<qubit>;
-using solution_t = std::vector<qubit>;
+using question_t = qubit[question_size];
+using solution_t = qubit[question_size];
 
 #endif
