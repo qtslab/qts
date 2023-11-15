@@ -1,8 +1,9 @@
 #include "constant.h"
 #include "type.h"
+#include "global.h"
 #include "quantum_function.h"
 
-double calculate_weights(items_t items, solution_t solution) {
+double calculate_weights(solution_t solution) {
     double weights = 0;
     for (int i=0; i<question_size; i++) {
         if (solution[i].take) {
@@ -28,7 +29,7 @@ solution_t adjust_solution(solution_t solution, int capacity) {
     return solution;
 }
 
-inline solution_t aujust_neighbours(solution_t solution, int capacity) {
+inline solution_t adjust_neighbours(solution_t solution, int capacity) {
     
     return solution;
 }
