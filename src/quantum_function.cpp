@@ -2,9 +2,15 @@
 #include "type.h"
 #include "quantum_function.h"
 
-inline double calculate_weights(question_t question, solution_t solution) {
-    
-    return 0;
+double calculate_weights(items_t items, solution_t solution) {
+    double weights = 0;
+    for (int i=0; i<question_size; i++) {
+        if (solution[i].take) {
+            weights += items[i].weight;
+        }
+    }
+
+    return weights;
 }
 
 inline double measure(qubit q) {
@@ -12,29 +18,32 @@ inline double measure(qubit q) {
     return 0;
 }
 
-inline void gen_neighbours(int index, int items_size) {
-    
-    return ;
+inline solution_t gen_neighbours(int index, int items_size) {
+    solution_t neighbours;
+    return neighbours;
 }
 
-void adjust_solution(solution_t solution, int capacity) {
+solution_t adjust_solution(solution_t solution, int capacity) {
     
-    return ;
+    return solution;
 }
 
-inline void aujust_neighbours(solution_t solution, int capacity) {
+inline solution_t aujust_neighbours(solution_t solution, int capacity) {
     
-    return ;
+    return solution;
 }
 
-inline void new_best_fit(solution_t solution, int capacity) {
+inline solution_t new_best_fit(solution_t solution, solution_t best_fit, int capacity) {
+    if (calculate_weights(solution) > calculate_weights(best_fit)) {
+        return solution;
+    }
 
-    return ;
+    return best_fit;
 }
 
-inline void find_best_worst(solution_t neighbours) {
+inline solution_t find_best_worst(solution_t neighbours) {
     
-    return ;
+    return neighbours;
 }
 
 qubit update_q(solution_t best_sol, solution_t worst_sol, qubit q, int items_size) {

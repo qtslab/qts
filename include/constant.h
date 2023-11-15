@@ -11,7 +11,7 @@
 #define DEFAULT_ALPHA 0.5
 #define DEFAULT_BETA 0.5
 #define MAX_GEN 100
-#define QUESTION_SIZE 10
+#define QUESTION_SIZE 100
 */
 
 const double min_value = 1.0;
@@ -20,7 +20,7 @@ const double min_weight = 1.0;
 const double max_weight = 10.0;
 const double default_alpha = 0.5;
 const double default_beta = 0.5;
-const int max_gen = 100;
-const int question_size = 10;
+const int max_gen = 100; // NumIter
+const int question_size = 100; // n_items
 
 #endif

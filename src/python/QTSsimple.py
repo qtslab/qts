@@ -19,6 +19,10 @@ def measure(qindividuals):
     return np.vectorize(lambda x,y : 1 if (x > np.power(y,2)) else 0)\
                         (np.random.rand(n_items), qindividuals[:, 1])
 
+def gen_nbrs(qindividuals, N):
+    neighbours = [np.array(measure(qindividuals)) for i in range(N)]
+    return neighbours
+
 def adjust_solution(solution, C):
     itemsSelected = solution.nonzero()[0]
     weight = calculate_weights(items, solution)
@@ -55,17 +59,17 @@ def updateQ(worst_sol, best_sol, qindividuals):
         qindividuals[i, :] = np.dot(Ugate, qindividuals[i, :])
     return qindividuals
 
-qindividuals = np.zeros((n_items, 2))
-qindividuals.fill(1 / sqrt(2))
+qindividuals = np.zeros((n_items, 2)) # ok
+qindividuals.fill(1 / sqrt(2)) # ok
 solution = measure(qindividuals)
 best_fit = solution
-NumIter = 1000
+NumIter = 1000 # ok
 best_fit = adjust_solution(best_fit, C)
 
-i = 0
-while i < NumIter:
-    i = i + 1
-    neighbours = [np.array(measure(qindividuals)) for i in range(N)]
+i = 0 # ok
+while i < NumIter: # ok
+    i = i + 1 # ok
+    neighbours = gen_nbrs(qindividuals, N)
     neighbours = adjust_neighbours(neighbours, C)
     (best_solution, worst_solution) = find_best_worst(neighbours)
     best_fit = new_best_fit(best_solution, best_fit)
