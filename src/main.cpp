@@ -5,12 +5,11 @@
 
 #include "constant.h"
 #include "type.h"
-#include "global.h"
 
 #include "QTS.hpp"
 #include "PE-QTS.hpp"
 
-int print_answer(items_t items, solution_t answer) {
+int print_answer(items_t &items, solution_t answer) {
     // print all items
     for (int i=0; i<question_size; i++) {
         std::cout << "weight: " << items[i].weight << " value: " << items[i].value;
@@ -38,6 +37,7 @@ int print_answer(items_t items, solution_t answer) {
 
 int main(int argc, char* argv[]) {
     // generate question
+    items_t items;
     solution_t solution;
 
     for (int i=0; i<question_size; i++) {
@@ -66,12 +66,12 @@ int main(int argc, char* argv[]) {
 
     std::cout << "QTS: " << std::endl;
     auto QTS_start = std::chrono::high_resolution_clock::now();
-    QTS(capacity, max_gen);
+    QTS(&items, capacity, max_gen);
     auto QTS_end = std::chrono::high_resolution_clock::now();
 
     std::cout << "PE-QTS: " << std::endl;
     auto PE_QTS_start = std::chrono::high_resolution_clock::now();
-    PE_QTS(capacity, max_gen);
+    PE_QTS(&items, capacity, max_gen);
     auto PE_QTS_end = std::chrono::high_resolution_clock::now();
 
     std::cout << "QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(QTS_end - QTS_start).count() << "ns" << std::endl;

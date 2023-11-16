@@ -8,10 +8,9 @@
 
 #include "constant.h"
 #include "type.h"
-#include "global.h"
 #include "quantum_function.h"
 
-int QTS(double capacity, int max_gen) {
+int QTS(items_t *items, double capacity, int max_gen) {
     int n = 10;
 
     qubit qindividuals[question_size][2];
@@ -23,13 +22,13 @@ int QTS(double capacity, int max_gen) {
     solution_t solution;
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
         // neighbours = gen_nbrs(qindividuals, N)
-        neighbours = gen_neighbours(neighbours, question_size);
+        // neighbours = gen_neighbours(neighbours, question_size);
         // neighbours = adjust_neighbours(neighbours, C)
-        neighbours = adjust_neighbours(neighbours, capacity);
+        // neighbours = adjust_neighbours(neighbours, capacity);
         // (best_solution, worst_solution) = find_best_worst(neighbours)
-        
+
         // best_fit = new_best_fit(best_solution, best_fit)
-        best_fit = new_best_fit(solution, best_fit, capacity);
+        best_fit = new_best_fit(solution, best_fit);
         // qindividuals = updateQ(best_solution, worst_solution, qindividuals)
     }
 

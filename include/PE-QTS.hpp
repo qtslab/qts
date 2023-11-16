@@ -3,9 +3,8 @@
 
 #include "constant.h"
 #include "type.h"
-#include "global.h"
 
-int PE_QTS(double capacity, int max_gen) {
+int PE_QTS(items_t *items, double capacity, int max_gen) {
 
     return 0;
 }
