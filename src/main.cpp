@@ -66,12 +66,12 @@ int main(int argc, char* argv[]) {
 
     std::cout << "QTS: " << std::endl;
     auto QTS_start = std::chrono::high_resolution_clock::now();
-    QTS(&items, capacity, max_gen);
+    QTS(items, capacity, max_gen);
     auto QTS_end = std::chrono::high_resolution_clock::now();
 
     std::cout << "PE-QTS: " << std::endl;
     auto PE_QTS_start = std::chrono::high_resolution_clock::now();
-    PE_QTS(&items, capacity, max_gen);
+    PE_QTS(items, capacity, max_gen);
     auto PE_QTS_end = std::chrono::high_resolution_clock::now();
 
     std::cout << "QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(QTS_end - QTS_start).count() << "ns" << std::endl;

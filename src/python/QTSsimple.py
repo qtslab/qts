@@ -1,4 +1,3 @@
-import time
 import numpy as np
 from itertools import compress
 from functools import reduce
