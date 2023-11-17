@@ -38,15 +38,17 @@ int print_answer(items_t &items, solution_t answer) {
 int main(int argc, char* argv[]) {
     // generate question
     items_t items;
-    solution_t solution;
-
+    // initialize items
     for (int i=0; i<question_size; i++) {
-        items[i].value = min_value + (max_value - min_value) * (double)rand() / RAND_MAX;
-        items[i].weight = min_weight + (max_weight - min_weight) * (double)rand() / RAND_MAX;
-        solution[i].alpha = default_alpha;
-        solution[i].beta = default_beta;
-        solution[i].take = false;
+        std::random_device rd;  // 取得隨機數種子
+        std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
+        std::uniform_real_distribution<double> value_dis(min_value, max_value);
+        std::uniform_real_distribution<double> weight_dis(min_weight, max_weight);
+        items[i].value = value_dis(gen);
+        items[i].weight = weight_dis(gen);
     }
+
+    solution_t solution;
 
     // calculate capacity
     double capacity = 0;

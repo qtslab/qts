@@ -15,17 +15,12 @@ int QTS(items_t& items, double capacity, int max_gen) {
     int n = 10; // Neighbourhood size
 
     solution_t qindividuals;
-    for (int i=0; i<question_size; i++) {
-        qindividuals[i].alpha = 1/sqrt(2);
-        qindividuals[i].beta = 1/sqrt(2);
-        qindividuals[i].take = false;
-    }
-
     solution_t best_fit;
     best_fit = measure(qindividuals);
     best_fit = adjust_solution(best_fit, capacity);
 
     // QTS main loop
+    std::cout << "QTS main loop" << std::endl;
     solution_t neighbours; // neighbours in loop
     solution_t best_solution; // best solution in loop
     solution_t worst_solution; // worst solution in loop
@@ -43,6 +38,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
         qindividuals = update_q(best_solution, worst_solution, qindividuals);
     }
 
+    std::cout << "QTS end" << std::endl;
     // get answer from best_fit at the end of QTS
     for (int i=0; i<question_size; i++) {
         std::random_device rd;  // 取得隨機數種子

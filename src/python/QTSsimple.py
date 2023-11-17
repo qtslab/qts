@@ -11,7 +11,7 @@ items = np.random.uniform(low=MinWeight, high=MaxWeight, size=(n_items,))
 C = reduce(lambda x,y : x+y, items) / 2 # Bag maximum capacity
 values = np.vectorize(lambda x: x + 5)(items)
 
-def calculate_weights(items, solution):
+def calculate_weights(items, solution): # ok
     return reduce(lambda x,y: x+y, compress(items, solution), 0)
 
 def measure(qindividuals):
