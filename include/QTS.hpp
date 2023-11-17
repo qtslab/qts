@@ -1,8 +1,8 @@
 #ifndef QTS_HPP
 #define QTS_HPP
 
-#include <map>
 #include <random>
+#include <iostream>
 // #include <Eigen/Dense>
 // #include <armadillo>
 
@@ -21,20 +21,15 @@ int QTS(items_t& items, double capacity, int max_gen) {
 
     // QTS main loop
     std::cout << "QTS main loop" << std::endl;
-    solution_t neighbours; // neighbours in loop
+    solution_t neighbors; // neighbors in loop
     solution_t best_solution; // best solution in loop
     solution_t worst_solution; // worst solution in loop
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
-        // neighbours = gen_nbrs(qindividuals, N)
-        neighbours = gen_neighbours(neighbours, n);
-        // neighbours = adjust_neighbours(neighbours, C)
-        neighbours = adjust_neighbours(neighbours, capacity);
-        // (best_solution, worst_solution) = find_best_worst(neighbours)
-        best_solution = find_best(neighbours);
-        worst_solution = find_worst(neighbours);
-        // best_fit = new_best_fit(best_solution, best_fit)
+        neighbors = gen_neighbors(neighbors, n);
+        neighbors = adjust_neighbors(neighbors, capacity);
+        best_solution = find_best(neighbors);
+        worst_solution = find_worst(neighbors);
         best_fit = new_best_fit(best_solution, best_fit);
-        // qindividuals = updateQ(best_solution, worst_solution, qindividuals)
         qindividuals = update_q(best_solution, worst_solution, qindividuals);
     }
 

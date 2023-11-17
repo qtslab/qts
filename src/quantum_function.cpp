@@ -19,16 +19,16 @@ solution_t measure(solution_t& qindividuals) {
     return qindividuals;
 }
 
-solution_t gen_neighbours(solution_t& qindividuals, int index) {
+solution_t gen_neighbors(solution_t& qindividuals, int index) {
     // Apply n measures on the qubits to generate classical solutions
-    solution_t neighbours;
+    solution_t neighbors;
     for (int i=0; i<question_size; i++) {
-        neighbours[i].alpha = 1/sqrt(2);
-        neighbours[i].beta = 1/sqrt(2);
-        neighbours[i].take = false;
+        neighbors[i].alpha = 1/sqrt(2);
+        neighbors[i].beta = 1/sqrt(2);
+        neighbors[i].take = false;
     }
 
-    return neighbours;
+    return neighbors;
 }
 
 solution_t adjust_solution(solution_t& solution, int capacity) {
@@ -41,7 +41,7 @@ solution_t adjust_solution(solution_t& solution, int capacity) {
     return solution;
 }
 
-solution_t adjust_neighbours(solution_t& vizinhos, int capacity) {
+solution_t adjust_neighbors(solution_t& vizinhos, int capacity) {
 
     return vizinhos;
 }
@@ -55,20 +55,20 @@ solution_t new_best_fit(solution_t& new_solution, solution_t& best_fit) {
     return best_fit;
 }
 
-solution_t find_best(solution_t& neighbours) {
-    // Find the best solutions in the neighbours
+solution_t find_best(solution_t& neighbors) {
+    // Find the best solutions in the neighbors
     solution_t best_sol;
 
 
 
-    return neighbours;
+    return best_sol;
 }
 
-solution_t find_worst(solution_t& neighbours) {
-    // Find the worst solutions in the neighbours
+solution_t find_worst(solution_t& neighbors) {
+    // Find the worst solutions in the neighbors
     solution_t worst_sol;
 
-    return neighbours;
+    return worst_sol;
 }
 
 
