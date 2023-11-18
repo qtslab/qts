@@ -3,6 +3,7 @@
 
 #include <random>
 #include <iostream>
+#include <unordered_set>
 // #include <Eigen/Dense>
 // #include <armadillo>
 
@@ -14,18 +15,18 @@ int QTS(items_t& items, double capacity, int max_gen) {
     // initialize QTS
     int n = 10; // Neighbourhood size
 
-    solution_t qindividuals;
+    qubit qindividuals;
     solution_t best_fit;
     best_fit = measure(qindividuals);
     best_fit = adjust_solution(best_fit, capacity);
 
     // QTS main loop
     std::cout << "QTS main loop" << std::endl;
-    solution_t neighbors; // neighbors in loop
+    std::unordered_set<solution_t> neighbors; // neighbors in loop
     solution_t best_solution; // best solution in loop
     solution_t worst_solution; // worst solution in loop
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
-        neighbors = gen_neighbors(neighbors, n);
+        neighbors = gen_neighbors(qindividuals, n);
         neighbors = adjust_neighbors(neighbors, capacity);
         best_solution = find_best(neighbors);
         worst_solution = find_worst(neighbors);

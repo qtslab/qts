@@ -1,3 +1,5 @@
+#include <unordered_set>
+
 #include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
@@ -14,18 +16,19 @@ double calculate_weights(items_t& items, solution_t& solution) {
     return weights;
 }
 
-solution_t measure(solution_t& qindividuals) {
+solution_t measure(qubit qindividuals) {
     // Consecutive measurs on the qubit in order to generate a classical solution
-    return qindividuals;
+    solution_t solution;
+    return solution;
 }
 
-solution_t gen_neighbors(solution_t& qindividuals, int index) {
+std::unordered_set<solution_t> gen_neighbors(qubit qindividuals, int index) {
     // Apply n measures on the qubits to generate classical solutions
-    solution_t neighbors;
+    std::unordered_set<solution_t> neighbors;
     for (int i=0; i<question_size; i++) {
-        neighbors[i].alpha = 1/sqrt(2);
-        neighbors[i].beta = 1/sqrt(2);
-        neighbors[i].take = false;
+        // neighbors[i].alpha = 1/sqrt(2);
+        // neighbors[i].beta = 1/sqrt(2);
+        // neighbors[i].take = false;
     }
 
     return neighbors;
@@ -41,7 +44,7 @@ solution_t adjust_solution(solution_t& solution, int capacity) {
     return solution;
 }
 
-solution_t adjust_neighbors(solution_t& vizinhos, int capacity) {
+std::unordered_set<solution_t> adjust_neighbors(std::unordered_set<solution_t>& vizinhos, int capacity) {
 
     return vizinhos;
 }
@@ -55,7 +58,7 @@ solution_t new_best_fit(solution_t& new_solution, solution_t& best_fit) {
     return best_fit;
 }
 
-solution_t find_best(solution_t& neighbors) {
+solution_t find_best(std::unordered_set<solution_t>& neighbors) {
     // Find the best solutions in the neighbors
     solution_t best_sol;
 
@@ -64,7 +67,7 @@ solution_t find_best(solution_t& neighbors) {
     return best_sol;
 }
 
-solution_t find_worst(solution_t& neighbors) {
+solution_t find_worst(std::unordered_set<solution_t>& neighbors) {
     // Find the worst solutions in the neighbors
     solution_t worst_sol;
 
@@ -72,7 +75,7 @@ solution_t find_worst(solution_t& neighbors) {
 }
 
 
-solution_t update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals) {
+qubit update_q(solution_t& best_sol, solution_t& worst_sol, qubit qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
     const double angle = 0.01;
@@ -81,12 +84,12 @@ solution_t update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qin
     double mod_signal = 0;
     for (int i=0; i<question_size; i++) {
         mod_signal = best_sol[i].alpha - worst_sol[i].alpha;
-        if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
+        if (qindividuals.alpha * qindividuals.beta < 0) {
             mod_signal *= -1;
         }
 
         solution_t Ugate = {{cos(mod_signal*theta), -sin(mod_signal*theta)}, {sin(mod_signal*theta), cos(mod_signal*theta)}};
-        qindividuals[i].alpha = Ugate[i].alpha * qindividuals[i].alpha;
+        qindividuals.alpha = Ugate[i].alpha * qindividuals.alpha;
     }
 
     return qindividuals;
