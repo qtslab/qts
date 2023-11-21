@@ -1,4 +1,4 @@
-#include <unordered_set>
+#include <set>
 
 #include "constant.h"
 #include "type.h"
@@ -22,9 +22,9 @@ solution_t measure(qubit qindividuals) {
     return solution;
 }
 
-std::unordered_set<solution_t> gen_neighbors(qubit qindividuals, int index) {
+std::set<solution_t> gen_neighbors(qubit qindividuals, int index) {
     // Apply n measures on the qubits to generate classical solutions
-    std::unordered_set<solution_t> neighbors;
+    std::set<solution_t> neighbors;
     for (int i=0; i<question_size; i++) {
         // neighbors[i].alpha = 1/sqrt(2);
         // neighbors[i].beta = 1/sqrt(2);
@@ -44,7 +44,7 @@ solution_t adjust_solution(solution_t& solution, int capacity) {
     return solution;
 }
 
-std::unordered_set<solution_t> adjust_neighbors(std::unordered_set<solution_t>& vizinhos, int capacity) {
+std::set<solution_t> adjust_neighbors(std::set<solution_t>& vizinhos, int capacity) {
 
     return vizinhos;
 }
@@ -58,7 +58,7 @@ solution_t new_best_fit(solution_t& new_solution, solution_t& best_fit) {
     return best_fit;
 }
 
-solution_t find_best(std::unordered_set<solution_t>& neighbors) {
+solution_t find_best(std::set<solution_t>& neighbors) {
     // Find the best solutions in the neighbors
     solution_t best_sol;
 
@@ -67,7 +67,7 @@ solution_t find_best(std::unordered_set<solution_t>& neighbors) {
     return best_sol;
 }
 
-solution_t find_worst(std::unordered_set<solution_t>& neighbors) {
+solution_t find_worst(std::set<solution_t>& neighbors) {
     // Find the worst solutions in the neighbors
     solution_t worst_sol;
 

@@ -3,7 +3,7 @@
 
 #include <random>
 #include <iostream>
-#include <unordered_set>
+#include <set>
 // #include <Eigen/Dense>
 // #include <armadillo>
 
@@ -22,7 +22,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
 
     // QTS main loop
     std::cout << "QTS main loop" << std::endl;
-    std::unordered_set<solution_t> neighbors; // neighbors in loop
+    std::set<solution_t> neighbors; // neighbors in loop
     solution_t best_solution; // best solution in loop
     solution_t worst_solution; // worst solution in loop
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
