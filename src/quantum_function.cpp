@@ -10,6 +10,7 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
+    // std::cout << "solution size: " << solution.size() << std::endl;
     // for (int i=0; i<question_size; i++) {
     //     if (solution[i].take) {
     //         weights += items[i].weight;
@@ -41,7 +42,7 @@ solution_t measure(solution_t& qindividuals) {
 std::set<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
     // Apply n measures on the qubits to generate classical solutions
     // std::cout << "gen_neighbors" << std::endl;
-    std::set<solution_t> neighbors;
+    std::set<solution_t> neighbors = {};
     for (int i=0; i<n; i++) {
         // neighbors.insert(measure(qindividuals));
     }
@@ -51,7 +52,7 @@ std::set<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
 
 solution_t adjust_solution(items_t& items, solution_t& solution, int capacity) {
     // Adjust the solution to the capacity constraint
-    std::cout << "adjust_solution" << std::endl;
+    // std::cout << "adjust_solution" << std::endl;
     double weights = calculate_weights(items, solution); // items not defined
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
@@ -92,7 +93,6 @@ solution_t find_best(items_t& items, std::set<solution_t>& neighbors) {
     // Find the best solutions in the neighbors
     // std::cout << "find_best" << std::endl;
     solution_t best_sol;
-
     for (auto neighbor : neighbors) {
         if (calculate_weights(items, neighbor) > calculate_weights(items, best_sol)) {
             best_sol = neighbor;
@@ -106,7 +106,6 @@ solution_t find_worst(items_t& items, std::set<solution_t>& neighbors) {
     // Find the worst solutions in the neighbors
     // std::cout << "find_worst" << std::endl;
     solution_t worst_sol;
-
     for (auto neighbor : neighbors) {
         if (calculate_weights(items, neighbor) < calculate_weights(items, worst_sol)) {
             worst_sol = neighbor;
