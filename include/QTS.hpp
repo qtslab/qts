@@ -15,7 +15,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
     // initialize QTS
     int n = 10; // Neighbourhood size
 
-    qubit qindividuals;
+    solution_t qindividuals;
     solution_t best_fit;
     best_fit = measure(qindividuals);
     best_fit = adjust_solution(best_fit, capacity);

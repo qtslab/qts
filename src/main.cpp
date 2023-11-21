@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
     // print question
     std::cout << "Question: " << std::endl;
     for (int i=0; i<question_size; i++) {
-        std::cout << items[i].weight << " " << items[i].value << std::endl;
+        std::cout << i+1 << ": " << items[i].weight << " " << items[i].value << std::endl;
     }
 
     std::cout << std::endl << "Max generation: " << max_gen << std::endl << std::endl;
