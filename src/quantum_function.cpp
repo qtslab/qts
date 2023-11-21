@@ -10,10 +10,11 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
-
-    for (auto item : items) {
-        weights += item.weight;
-    }
+    // for (int i=0; i<question_size; i++) {
+    //     if (solution[i].take) {
+    //         weights += items[i].weight;
+    //     }
+    // }
 
     return weights;
 }
@@ -37,16 +38,12 @@ solution_t measure(solution_t& qindividuals) {
     return solution;
 }
 
-std::set<solution_t> gen_neighbors(solution_t& qindividuals, int index) {
+std::set<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
     // Apply n measures on the qubits to generate classical solutions
-    std::cout << "gen_neighbors" << std::endl;
-
+    // std::cout << "gen_neighbors" << std::endl;
     std::set<solution_t> neighbors;
-    std::random_device rd;  // 取得隨機數種子
-    std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
-    for (int i=0; i<question_size; i++) {
-        solution_t neighbor = measure(qindividuals);
-        // neighbors.insert(neighbor); // compile error
+    for (int i=0; i<n; i++) {
+        // neighbors.insert(measure(qindividuals));
     }
 
     return neighbors;
@@ -58,26 +55,32 @@ solution_t adjust_solution(items_t& items, solution_t& solution, int capacity) {
     double weights = calculate_weights(items, solution); // items not defined
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
+    int times = 1;
     while (weights > capacity) {
         // randomly remove an item
-        std::uniform_int_distribution<int> dis(0, question_size-1);
+        std::uniform_int_distribution<int> dis(0, question_size-times);
         int rand_index = dis(gen);
         item selected = items[rand_index];
         weights -= selected.weight;
-        solution.erase(solution.begin() + rand_index);
+        solution[rand_index].take = false;
+        times++;
     }
 
     return solution;
 }
 
-std::set<solution_t> adjust_neighbors(std::set<solution_t>& vizinhos, int capacity) {
-    std::cout << "adjust_neighbors" << std::endl;
+std::set<solution_t> adjust_neighbors(items_t& items, std::set<solution_t>& vizinhos, int capacity) {
+    // std::cout << "adjust_neighbors" << std::endl;
+    for (auto vizinho : vizinhos) {
+        vizinho = adjust_solution(items, vizinho, capacity);
+    }
+
     return vizinhos;
 }
 
 solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& best_fit) {
     // Compare the new solution with the best fit
-    std::cout << "new_best_fit" << std::endl;
+    // std::cout << "new_best_fit" << std::endl;
     if (calculate_weights(items, new_solution) > calculate_weights(items, best_fit)) {
         return new_solution;
     }
