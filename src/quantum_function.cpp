@@ -59,10 +59,10 @@ std::vector<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
     return neighbors;
 }
 
-solution_t adjust_solution(items_t& items, solution_t& solution, double capacity) {
+int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     // Adjust the solution to the capacity constraint
     // std::cout << "adjust_solution" << std::endl;
-    double weights = calculate_weights(items, solution); // items not defined
+    double weights = calculate_weights(items, solution);
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     int times = 1;
@@ -75,13 +75,15 @@ solution_t adjust_solution(items_t& items, solution_t& solution, double capacity
         times++;
     }
 
-    return solution;
+    return 0;
 }
 
 int adjust_neighbors(items_t& items, std::vector<solution_t>& vizinhos, double capacity) {
     // std::cout << "adjust_neighbors" << std::endl;
     for (auto vizinho : vizinhos) {
-        vizinho = adjust_solution(items, vizinho, capacity);
+        std::cout << "weights before: " << calculate_weights(items, vizinho) << std::endl; // debug
+        adjust_solution(items, vizinho, capacity);
+        std::cout << "weights after: " << calculate_weights(items, vizinho) << std::endl; // debug
     }
 
     return 0;
@@ -135,11 +137,11 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividua
             mod_signal *= -1; // fix answer to 0~90 degree
         }
 
-        // std::cout << "mod_signal: " << mod_signal << std::endl;
+        std::cout << "mod_signal: " << mod_signal << std::endl;
         qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
         qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
-        // std::cout << "qindividuals[" << i << "].alpha: " << qindividuals[i].alpha << std::endl;
-        // std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
+        std::cout << "qindividuals[" << i << "].alpha: " << qindividuals[i].alpha << std::endl;
+        std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
     }
 
     // std::cout << "update_q end" << std::endl;

@@ -15,9 +15,8 @@ int QTS(items_t& items, double capacity, int max_gen) {
     int n = 10; // Neighbourhood size
 
     solution_t qindividuals(question_size);
-    solution_t best_fit(question_size);
-    best_fit = measure(qindividuals);
-    best_fit = adjust_solution(items, best_fit, capacity);
+    solution_t best_fit = measure(qindividuals);
+    adjust_solution(items, best_fit, capacity);
 
     // QTS main loop
     std::vector<solution_t> neighbors; // neighbors in loop
