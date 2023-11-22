@@ -29,10 +29,13 @@ solution_t measure(solution_t& qindividuals) {
     for (int i = 0; i < question_size; ++i) {
         std::uniform_real_distribution<double> dis(0.0, 1.0);
         double rand_observation = dis(gen);
+        qubit q = qindividuals[i];
         if (rand_observation < (qindividuals[i].beta * qindividuals[i].beta)) {
-            solution.push_back(qubit{qindividuals[i].alpha, qindividuals[i].beta, true});
+            q.take = true;
+            solution.push_back(q);
         } else {
-            solution.push_back(qubit{qindividuals[i].alpha, qindividuals[i].beta, false});
+            q.take = false;
+            solution.push_back(q);
         }
     }
 
@@ -70,13 +73,13 @@ solution_t adjust_solution(items_t& items, solution_t& solution, int capacity) {
     return solution;
 }
 
-std::set<solution_t> adjust_neighbors(items_t& items, std::set<solution_t>& vizinhos, int capacity) {
+int adjust_neighbors(items_t& items, std::set<solution_t>& vizinhos, int capacity) {
     // std::cout << "adjust_neighbors" << std::endl;
     for (auto vizinho : vizinhos) {
         vizinho = adjust_solution(items, vizinho, capacity);
     }
 
-    return vizinhos;
+    return 0;
 }
 
 solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& best_fit) {
@@ -122,17 +125,15 @@ solution_t update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qin
     std::cout << "update_q" << std::endl;
     double theta = 0.01 * PI;
 
-    double mod_signal;
+    bool mod_signal;
     for (int i=0; i<question_size; i++) {
-        mod_signal = 0; // best_sol[i].alpha - worst_sol[i].alpha;
+        mod_signal = best_sol[i].take - worst_sol[i].take; // best_sol[i].alpha - worst_sol[i].alpha;
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree
         }
 
-        solution_t Ugate = {{cos(mod_signal*theta), -sin(mod_signal*theta)},
-                            {sin(mod_signal*theta), cos(mod_signal*theta)}};
-        qindividuals[i].alpha = Ugate[i].alpha * qindividuals[i].alpha;
-        qindividuals[i].beta = Ugate[i].beta * qindividuals[i].beta;
+        qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
+        qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
     }
 
     return qindividuals;

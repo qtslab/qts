@@ -28,7 +28,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
         std::cout << "QTS_loop: " << i << std::endl;
         neighbors = gen_neighbors(qindividuals, n);
-        neighbors = adjust_neighbors(items, neighbors, capacity);
+        adjust_neighbors(items, neighbors, capacity);
         best_solution = find_best(items, neighbors);
         worst_solution = find_worst(items, neighbors);
         best_fit = new_best_fit(items, best_solution, best_fit);
