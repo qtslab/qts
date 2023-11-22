@@ -10,6 +10,7 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
+    std::cout << "solution.size(): " << solution.size() << std::endl;
     solution.resize(question_size);
     for (int i=0; i<question_size; i++) {
         if (solution[i].take) {
@@ -26,7 +27,7 @@ solution_t measure(solution_t& qindividuals) {
 
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
-    for (int i = 0; i < question_size; ++i) {
+    for (int i=0; i<question_size; i++) {
         std::uniform_real_distribution<double> dis(0.0, 1.0);
         double rand_observation = dis(gen);
         qubit q = qindividuals[i];
@@ -54,7 +55,7 @@ std::vector<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
     return neighbors;
 }
 
-solution_t adjust_solution(items_t& items, solution_t& solution, int capacity) {
+solution_t adjust_solution(items_t& items, solution_t& solution, double capacity) {
     // Adjust the solution to the capacity constraint
     // std::cout << "adjust_solution" << std::endl;
     double weights = calculate_weights(items, solution); // items not defined
@@ -73,7 +74,7 @@ solution_t adjust_solution(items_t& items, solution_t& solution, int capacity) {
     return solution;
 }
 
-int adjust_neighbors(items_t& items, std::vector<solution_t>& vizinhos, int capacity) {
+int adjust_neighbors(items_t& items, std::vector<solution_t>& vizinhos, double capacity) {
     // std::cout << "adjust_neighbors" << std::endl;
     for (auto vizinho : vizinhos) {
         vizinho = adjust_solution(items, vizinho, capacity);
@@ -95,7 +96,7 @@ solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& be
 solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {
     // Find the best solutions in the neighbors
     // std::cout << "find_best" << std::endl;
-    solution_t best_sol;
+    solution_t best_sol = neighbors[0];
     for (auto neighbor : neighbors) {
         if (calculate_weights(items, neighbor) > calculate_weights(items, best_sol)) {
             best_sol = neighbor;
@@ -108,7 +109,7 @@ solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {
 solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
     // Find the worst solutions in the neighbors
     // std::cout << "find_worst" << std::endl;
-    solution_t worst_sol;
+    solution_t worst_sol = neighbors[0];
     for (auto neighbor : neighbors) {
         if (calculate_weights(items, neighbor) < calculate_weights(items, worst_sol)) {
             worst_sol = neighbor;
@@ -123,14 +124,9 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividua
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
     // std::cout << "update_q" << std::endl;
-    double theta = 0.01 * PI;
-
-    int  mod_signal;
-    best_sol.resize(question_size);
-    worst_sol.resize(question_size);
-    qindividuals.resize(question_size);
+    const double theta = 0.01 * PI;
     for (int i=0; i<question_size; i++) {
-        mod_signal = best_sol[i].take - worst_sol[i].take; // best_sol[i].alpha - worst_sol[i].alpha;
+        int  mod_signal = best_sol[i].take - worst_sol[i].take; // best_sol[i].alpha - worst_sol[i].alpha;
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree
         }

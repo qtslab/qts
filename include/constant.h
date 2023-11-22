@@ -24,7 +24,7 @@ const double default_beta = 0.5;
 // const int question_size = 100; // n_items
 
 // for test
-const int max_gen = 100; // NumIter
+const int max_gen = 20; // NumIter
 const int question_size = 10; // n_items
 
 #endif

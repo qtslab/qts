@@ -20,18 +20,23 @@ int QTS(items_t& items, double capacity, int max_gen) {
     best_fit = adjust_solution(items, best_fit, capacity);
 
     // QTS main loop
-    std::cout << "QTS main loop" << std::endl;
     std::vector<solution_t> neighbors; // neighbors in loop
-    solution_t best_solution(question_size); // best solution in loop
-    solution_t worst_solution(question_size); // worst solution in loop
+    solution_t best_solution(question_size); // best solution in loop(one iteration)
+    solution_t worst_solution(question_size); // worst solution in loop(one iteration)
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
-        std::cout << "QTS_loop: " << i << std::endl;
+        std::cout << "QTS_loop: " << i << std::endl; // debug
         neighbors = gen_neighbors(qindividuals, n);
+        // print_neighbors(items, neighbors); // debug
         adjust_neighbors(items, neighbors, capacity);
+        // print_neighbors(items, neighbors); // debug
         best_solution = find_best(items, neighbors);
+        // print_solution(items, best_solution); // debug
         worst_solution = find_worst(items, neighbors);
+        // print_solution(items, worst_solution); // debug
         best_fit = new_best_fit(items, best_solution, best_fit);
+        // print_solution(items, best_fit); // debug
         update_q(best_solution, worst_solution, qindividuals);
+        print_solution(items, best_fit); // debug
     }
 
     std::cout << "QTS end" << std::endl;
@@ -49,15 +54,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
     }
 
     // print answer
-    for (int i=0; i<question_size; i++) {
-        std::cout << i+1 << ": ";
-        std::cout << "weight: " << items[i].weight << " value: " << items[i].value << " ";
-        if (best_fit[i].take) {
-            std::cout << "take" << std::endl;
-        } else {
-            std::cout << "not take" << std::endl;
-        }
-    }
+    print_solution(items, best_fit);
 
     std::cout << "value: ";
     int total_value = 0;

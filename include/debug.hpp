@@ -31,24 +31,4 @@ void print_neighbors(items_t& items, std::vector<solution_t>& neighbors) {
     }
 }
 
-void print_best_fit(items_t& items, solution_t& best_fit) {
-    std::cout << "best_fit" << std::endl;
-    print_solution(items, best_fit);
-}
-
-void print_best_solution(items_t& items, solution_t& best_solution) {
-    std::cout << "best_solution" << std::endl;
-    print_solution(items, best_solution);
-}
-
-void print_worst_solution(items_t& items, solution_t& worst_solution) {
-    std::cout << "worst_solution" << std::endl;
-    print_solution(items, worst_solution);
-}
-
-void print_qindividuals(items_t& items, solution_t& qindividuals) {
-    std::cout << "qindividuals" << std::endl;
-    print_solution(items, qindividuals);
-}
-
 #endif
