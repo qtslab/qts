@@ -20,7 +20,11 @@ const double min_weight = 1.0;
 const double max_weight = 10.0;
 const double default_alpha = 0.5;
 const double default_beta = 0.5;
+// const int max_gen = 100; // NumIter
+// const int question_size = 100; // n_items
+
+// for test
 const int max_gen = 100; // NumIter
-const int question_size = 100; // n_items
+const int question_size = 10; // n_items
 
 #endif

@@ -32,7 +32,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
         best_solution = find_best(items, neighbors);
         worst_solution = find_worst(items, neighbors);
         best_fit = new_best_fit(items, best_solution, best_fit);
-        qindividuals = update_q(best_solution, worst_solution, qindividuals);
+        update_q(best_solution, worst_solution, qindividuals);
     }
 
     std::cout << "QTS end" << std::endl;

@@ -13,6 +13,6 @@ solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& be
 int adjust_neighbors(items_t& items, std::set<solution_t>& vizinhos, int capacity);
 solution_t find_best(items_t& items, std::set<solution_t>& neighbors);
 solution_t find_worst(items_t& items, std::set<solution_t>& neighbors);
-solution_t update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals);
+int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals);
 
 #endif

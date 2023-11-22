@@ -10,12 +10,12 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
-    // std::cout << "solution size: " << solution.size() << std::endl;
-    // for (int i=0; i<question_size; i++) {
-    //     if (solution[i].take) {
-    //         weights += items[i].weight;
-    //     }
-    // }
+    solution.resize(question_size);
+    for (int i=0; i<question_size; i++) {
+        if (solution[i].take) {
+            weights += items[i].weight;
+        }
+    }
 
     return weights;
 }
@@ -45,7 +45,7 @@ solution_t measure(solution_t& qindividuals) {
 std::set<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
     // Apply n measures on the qubits to generate classical solutions
     // std::cout << "gen_neighbors" << std::endl;
-    std::set<solution_t> neighbors = {};
+    std::set<solution_t> neighbors;
     for (int i=0; i<n; i++) {
         // neighbors.insert(measure(qindividuals));
     }
@@ -119,13 +119,16 @@ solution_t find_worst(items_t& items, std::set<solution_t>& neighbors) {
 }
 
 
-solution_t update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals) {
+int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
     std::cout << "update_q" << std::endl;
     double theta = 0.01 * PI;
 
-    bool mod_signal;
+    int  mod_signal;
+    best_sol.resize(question_size);
+    worst_sol.resize(question_size);
+    qindividuals.resize(question_size);
     for (int i=0; i<question_size; i++) {
         mod_signal = best_sol[i].take - worst_sol[i].take; // best_sol[i].alpha - worst_sol[i].alpha;
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
@@ -136,5 +139,6 @@ solution_t update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qin
         qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
     }
 
-    return qindividuals;
+    std::cout << "update_q end" << std::endl;
+    return 0;
 }
