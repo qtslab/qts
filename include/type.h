@@ -9,7 +9,7 @@
 struct qubit {
     double alpha = 1/sqrt(2);
     double beta = 1/sqrt(2);
-    bool take = false;
+    bool take;
 };
 
 struct item {

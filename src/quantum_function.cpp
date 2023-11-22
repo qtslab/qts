@@ -10,8 +10,6 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
-    std::cout << "solution.size(): " << solution.size() << std::endl;
-    solution.resize(question_size);
     for (int i=0; i<question_size; i++) {
         if (solution[i].take) {
             weights += items[i].weight;
@@ -23,22 +21,28 @@ double calculate_weights(items_t& items, solution_t& solution) {
 
 solution_t measure(solution_t& qindividuals) {
     // std::cout << "measure" << std::endl;
-    solution_t solution(question_size);
+    solution_t solution;
 
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     for (int i=0; i<question_size; i++) {
         std::uniform_real_distribution<double> dis(0.0, 1.0);
         double rand_observation = dis(gen);
-        qubit q = qindividuals[i];
+        // std::cout << "rand_observation in measure: " << rand_observation << std::endl;
+        // std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
+
         if (rand_observation < (qindividuals[i].beta * qindividuals[i].beta)) {
-            q.take = true;
+            qubit q = {qindividuals[i].alpha, qindividuals[i].beta, true};
             solution.push_back(q);
         } else {
-            q.take = false;
+            qubit q = {qindividuals[i].alpha, qindividuals[i].beta, false};
             solution.push_back(q);
         }
     }
+
+    // for (int i=0; i<question_size; i++) {
+    //     std::cout << "solution[" << i << "].take: " << solution[i].take << std::endl;
+    // }
 
     return solution;
 }
@@ -126,13 +130,16 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividua
     // std::cout << "update_q" << std::endl;
     const double theta = 0.01 * PI;
     for (int i=0; i<question_size; i++) {
-        int  mod_signal = best_sol[i].take - worst_sol[i].take; // best_sol[i].alpha - worst_sol[i].alpha;
+        int  mod_signal = best_sol[i].take - worst_sol[i].take;
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree
         }
 
+        // std::cout << "mod_signal: " << mod_signal << std::endl;
         qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
         qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+        // std::cout << "qindividuals[" << i << "].alpha: " << qindividuals[i].alpha << std::endl;
+        // std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
     }
 
     // std::cout << "update_q end" << std::endl;

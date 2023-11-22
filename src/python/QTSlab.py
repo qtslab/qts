@@ -91,16 +91,6 @@ NumIter = 100
 expTime = 100 #實驗次數
 rTime = int(N/2) #轉角度次數(依序優劣排序)
 angle = 0.01
-expRecord = np.zeros((expTime, NumIter)) #用來記錄結果並畫圖的矩陣
-
-iteration_record = np.zeros(expTime)
-
-qts_time = np.zeros(expTime)
-
-print('Multiple rotation experiment')
-print(f'CASE I: {n_items} items, {expTime} experiments, {rTime} times rotation')
-
-start_time = time.time()
 
 k = 0
 while k < expTime:
@@ -132,8 +122,6 @@ while k < expTime:
 
     k = k + 1
 
-    #print("Best solution profit %f" % calculate_weights(values, best_fit))
-    #print("Best solution weight: %f" % calculate_weights(items, best_fit))
     if (k-1) % 5 == 0:
         sys.stdout.write(f"Exp time: {(k-1)}, running time : {round((time.time() - start_time))} s\n")
         sys.stdout.flush()
