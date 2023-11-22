@@ -102,38 +102,13 @@ while k < expTime:
     best_fit = solution
     i = 0
     best_fit = adjust_solution(best_fit, C)
-    expRecord[k][i] = calculate_weights(values, best_fit)
     while i < NumIter:
         neighbours = gen_nbrs(qindividuals, N)
         neighbours = adjust_neighbours(neighbours, C)
         tmp = [np.array(calculate_weights(values, vizinho)) for vizinho in neighbours]
         (best_solution, worst_solution) = find_best_worst(neighbours, tmp)
         best_fit = new_best_fit(best_solution, best_fit)
-        expRecord[k][i] = calculate_weights(values, best_fit)
         qindividuals = updateQ(best_solution, worst_solution, qindividuals)
         i = i + 1
-    qts_time[k] = time.time() - start_time_qts
     best_fit = None
-    ii = 1
-    while ii < NumIter:
-        if expRecord[k][ii-1] < expRecord[k][ii]:
-            iteration_record[k] = ii
-        ii = ii + 1
-
     k = k + 1
-
-    if (k-1) % 5 == 0:
-        sys.stdout.write(f"Exp time: {(k-1)}, running time : {round((time.time() - start_time))} s\n")
-        sys.stdout.flush()
-
-print("Running time : %.2f seconds" % (time.time() - start_time))
-print(expRecord[:,999])
-print("The average final update iteration of QTS: %.2f" % mean(iteration_record))
-print("The average time of QTS: %.2f s" % mean(qts_time))
-
-plt.plot(range(0,NumIter),np.average(expRecord, axis=0),'--')
-plt.title(f'CASE I: {n_items} items, {expTime} experiments,\n{rTime} times rotation, angle: {angle}, total time: {round(time.time() - start_time)}s\n')
-plt.legend(['QTS','AE-QTS'], loc='lower right')
-plt.xlabel('Iteration')
-plt.ylabel('Profit')
-plt.show()

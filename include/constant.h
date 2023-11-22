@@ -17,7 +17,7 @@ const double max_value = 10.0;
 const double min_weight = 1.0;
 const double max_weight = 10.0;
 // const int max_gen = 100; // NumIter
-// const int question_size = 100; // n_items
+// const int question_size = 2000; // n_items
 
 // for test
 const int max_gen = 50; // NumIter
