@@ -38,7 +38,7 @@ solution_t measure(solution_t& qindividuals) {
         std::uniform_real_distribution<double> dis(0.0, 1.0);
         double rand_observation = dis(gen);
         // std::cout << "rand_observation in measure: " << rand_observation << std::endl;
-        // std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
+        std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
 
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
             qubit q = {qindividuals[i].alpha, qindividuals[i].beta, true};
@@ -61,8 +61,7 @@ std::vector<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
     // std::cout << "gen_neighbors" << std::endl;
     std::vector<solution_t> neighbors;
     for (int i=0; i<n; i++) {
-        solution_t solution = measure(qindividuals);
-        neighbors.push_back(solution);
+        neighbors.push_back(measure(qindividuals));
     }
 
     return neighbors;
@@ -75,11 +74,12 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     int times = 1;
-    while (weights > capacity) {
+    while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         std::uniform_int_distribution<int> dis(0, question_size-times);
         int rand_index = dis(gen);
         weights -= items[rand_index].weight;
+        // std::cout << "weights: " << weights << std::endl;
         solution[rand_index].take = false;
         times++;
     }
