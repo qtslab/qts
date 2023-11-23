@@ -88,27 +88,23 @@ N = 100  # Neighbourhood size
 
 NumIter = 100
 
-expTime = 100 #實驗次數
 rTime = int(N/2) #轉角度次數(依序優劣排序)
 angle = 0.01
 
-k = 0
-while k < expTime:
-    #原始的QTS
-    start_time_qts = time.time()
-    qindividuals = np.zeros((n_items, 2))
-    qindividuals.fill(1 / sqrt(2))
-    solution = measure(qindividuals)
-    best_fit = solution
-    i = 0
-    best_fit = adjust_solution(best_fit, C)
-    while i < NumIter:
-        neighbours = gen_nbrs(qindividuals, N)
-        neighbours = adjust_neighbours(neighbours, C)
-        tmp = [np.array(calculate_weights(values, vizinho)) for vizinho in neighbours]
-        (best_solution, worst_solution) = find_best_worst(neighbours, tmp)
-        best_fit = new_best_fit(best_solution, best_fit)
-        qindividuals = updateQ(best_solution, worst_solution, qindividuals)
-        i = i + 1
-    best_fit = None
-    k = k + 1
+start_time_qts = time.time()
+qindividuals = np.zeros((n_items, 2))
+qindividuals.fill(1 / sqrt(2))
+solution = measure(qindividuals)
+best_fit = solution
+i = 0
+best_fit = adjust_solution(best_fit, C)
+while i < NumIter:
+    neighbours = gen_nbrs(qindividuals, N)
+    neighbours = adjust_neighbours(neighbours, C)
+    tmp = [np.array(calculate_weights(values, vizinho)) for vizinho in neighbours]
+    (best_solution, worst_solution) = find_best_worst(neighbours, tmp)
+    best_fit = new_best_fit(best_solution, best_fit)
+    qindividuals = updateQ(best_solution, worst_solution, qindividuals)
+    i = i + 1
+
+print("QTS: ", calculate_weights(values, best_fit))
