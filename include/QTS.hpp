@@ -55,13 +55,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
     // print answer
     print_solution(items, best_fit);
 
-    std::cout << "value: ";
-    int total_value = 0;
-    for (int i=0; i<question_size; i++) {
-        total_value += items[i].value * best_fit[i].take;
-    }
-
-    std::cout << total_value << std::endl;
+    std::cout << "value: " << calculate_values(items, best_fit) << std::endl;
     std::cout << "weight: " << calculate_weights(items, best_fit) << std::endl;
     std::cout << "capacity: " << capacity << std::endl;
 

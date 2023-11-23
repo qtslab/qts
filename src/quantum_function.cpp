@@ -11,12 +11,21 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
     for (int i=0; i<question_size; i++) {
-        if (solution[i].take) {
-            weights += items[i].weight;
-        }
+        weights += items[i].weight * solution[i].take;
     }
 
     return weights;
+}
+
+double calculate_values(items_t& items, solution_t& solution) {
+    // Calculate the values of the solution
+    // std::cout << "calculate_values" << std::endl;
+    double values = 0;
+    for (int i=0; i<question_size; i++) {
+        values += items[i].value * solution[i].take;
+    }
+
+    return values;
 }
 
 solution_t measure(solution_t& qindividuals) {
@@ -31,7 +40,7 @@ solution_t measure(solution_t& qindividuals) {
         // std::cout << "rand_observation in measure: " << rand_observation << std::endl;
         // std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
 
-        if (rand_observation < (qindividuals[i].beta * qindividuals[i].beta)) {
+        if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
             qubit q = {qindividuals[i].alpha, qindividuals[i].beta, true};
             solution.push_back(q);
         } else {
@@ -92,7 +101,7 @@ int adjust_neighbors(items_t& items, std::vector<solution_t>& vizinhos, double c
 solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& best_fit) {
     // Compare the new solution with the best fit
     // std::cout << "new_best_fit" << std::endl;
-    if (calculate_weights(items, new_solution) > calculate_weights(items, best_fit)) {
+    if (calculate_values(items, new_solution) > calculate_values(items, best_fit)) {
         return new_solution;
     }
 
@@ -104,7 +113,7 @@ solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {
     // std::cout << "find_best" << std::endl;
     solution_t best_sol = neighbors[0];
     for (auto neighbor : neighbors) {
-        if (calculate_weights(items, neighbor) > calculate_weights(items, best_sol)) {
+        if (calculate_values(items, neighbor) > calculate_values(items, best_sol)) {
             best_sol = neighbor;
         }
     }
@@ -117,7 +126,7 @@ solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
     // std::cout << "find_worst" << std::endl;
     solution_t worst_sol = neighbors[0];
     for (auto neighbor : neighbors) {
-        if (calculate_weights(items, neighbor) < calculate_weights(items, worst_sol)) {
+        if (calculate_values(items, neighbor) < calculate_values(items, worst_sol)) {
             worst_sol = neighbor;
         }
     }
@@ -137,11 +146,11 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividua
             mod_signal *= -1; // fix answer to 0~90 degree
         }
 
-        std::cout << "mod_signal: " << mod_signal << std::endl;
+        // std::cout << "mod_signal: " << mod_signal << std::endl;
         qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
         qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
-        std::cout << "qindividuals[" << i << "].alpha: " << qindividuals[i].alpha << std::endl;
-        std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
+        // std::cout << "qindividuals[" << i << "].alpha: " << qindividuals[i].alpha << std::endl;
+        // std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
     }
 
     // std::cout << "update_q end" << std::endl;
