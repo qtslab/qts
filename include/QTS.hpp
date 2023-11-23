@@ -35,22 +35,22 @@ int QTS(items_t& items, double capacity, int max_gen) {
         best_fit = new_best_fit(items, best_solution, best_fit);
         // print_solution(items, best_fit); // debug
         update_q(best_solution, worst_solution, qindividuals);
-        print_solution(items, best_fit); // debug
+        // print_solution(items, best_fit); // debug
     }
 
     std::cout << "QTS end" << std::endl;
     // get answer from best_fit at the end of QTS
-    std::random_device rd;  // 取得隨機數種子
-    std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
-    for (int i=0; i<question_size; i++) {
-        std::uniform_real_distribution<double> dis(0.0, 1.0);
-        double rand_observation = dis(gen); // 生成隨機數
-        if (rand_observation < best_fit[i].alpha) {
-            best_fit[i].take = true;
-        } else {
-            best_fit[i].take = false;
-        }
-    }
+    // std::random_device rd;  // 取得隨機數種子
+    // std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
+    // for (int i=0; i<question_size; i++) {
+    //     std::uniform_real_distribution<double> dis(0.0, 1.0);
+    //     double rand_observation = dis(gen); // 生成隨機數
+    //     if (rand_observation < best_fit[i].alpha) {
+    //         best_fit[i].take = true;
+    //     } else {
+    //         best_fit[i].take = false;
+    //     }
+    // }
 
     // print answer
     print_solution(items, best_fit);

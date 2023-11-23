@@ -1,6 +1,3 @@
-from ast import expr
-import time
-import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import compress
@@ -15,7 +12,6 @@ MinWeight = 1.0
 items = np.random.uniform(low=MinWeight, high=MaxWeight, size=(n_items,))
 
 C = reduce(lambda x,y : x+y, items) / 2
-# Profits array for each item. The item index corresponds to its associated profit value
 values = np.vectorize(lambda x: x + 5)(items)
 
 def calculate_weights(_items, solution):
@@ -87,11 +83,8 @@ def updateQ(best_sol, worst_sol, qindividuals, angle = 0.01):
 N = 100  # Neighbourhood size
 
 NumIter = 100
-
-rTime = int(N/2) #轉角度次數(依序優劣排序)
 angle = 0.01
 
-start_time_qts = time.time()
 qindividuals = np.zeros((n_items, 2))
 qindividuals.fill(1 / sqrt(2))
 solution = measure(qindividuals)

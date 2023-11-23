@@ -90,9 +90,11 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
 int adjust_neighbors(items_t& items, std::vector<solution_t>& vizinhos, double capacity) {
     // std::cout << "adjust_neighbors" << std::endl;
     for (auto vizinho : vizinhos) {
-        std::cout << "weights before: " << calculate_weights(items, vizinho) << std::endl; // debug
+        // std::cout << "weights before: " << calculate_weights(items, vizinho) << std::endl; // debug
+        // std::cout << "values before: " << calculate_values(items, vizinho) << std::endl; // debug
         adjust_solution(items, vizinho, capacity);
-        std::cout << "weights after: " << calculate_weights(items, vizinho) << std::endl; // debug
+        // std::cout << "weights after: " << calculate_weights(items, vizinho) << std::endl; // debug
+        // std::cout << "values after: " << calculate_values(items, vizinho) << std::endl; // debug
     }
 
     return 0;
@@ -133,7 +135,6 @@ solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
 
     return worst_sol;
 }
-
 
 int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
