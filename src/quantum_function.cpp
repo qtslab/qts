@@ -74,6 +74,8 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     int times = 1;
+
+    std::cout << "weights before: " << weights << std::endl; // debug
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         std::uniform_int_distribution<int> dis(0, question_size-times);
@@ -84,19 +86,7 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
         times++;
     }
 
-    return 0;
-}
-
-int adjust_neighbors(items_t& items, std::vector<solution_t>& vizinhos, double capacity) {
-    // std::cout << "adjust_neighbors" << std::endl;
-    for (auto vizinho : vizinhos) {
-        // std::cout << "weights before: " << calculate_weights(items, vizinho) << std::endl; // debug
-        // std::cout << "values before: " << calculate_values(items, vizinho) << std::endl; // debug
-        adjust_solution(items, vizinho, capacity);
-        // std::cout << "weights after: " << calculate_weights(items, vizinho) << std::endl; // debug
-        // std::cout << "values after: " << calculate_values(items, vizinho) << std::endl; // debug
-    }
-
+    std::cout << "weights after: " << weights << std::endl; // debug
     return 0;
 }
 

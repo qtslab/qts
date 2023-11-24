@@ -25,24 +25,21 @@ int QTS(items_t& items, double capacity, int max_gen) {
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
         std::cout << "QTS_loop: " << i << std::endl; // debug
         neighbors = gen_neighbors(qindividuals, n);
-        // print_neighbors(items, neighbors); // debug
-        adjust_neighbors(items, neighbors, capacity);
-        // print_neighbors(items, neighbors); // debug
+        // adjust_neighbors(items, neighbors, capacity);
+        for (int j=0; j<n; j++) {
+            adjust_solution(items, neighbors[j], capacity);
+        }
+
         best_solution = find_best(items, neighbors);
-        // print_solution(items, best_solution); // debug
         worst_solution = find_worst(items, neighbors);
-        // print_solution(items, worst_solution); // debug
         best_fit = new_best_fit(items, best_solution, best_fit);
-        // print_solution(items, best_fit); // debug
         update_q(best_solution, worst_solution, qindividuals);
         print_solution(items, best_fit); // debug
     }
 
     std::cout << "QTS end" << std::endl;
-    // get answer from best_fit at the end of QTS
-    // print_solution(items, best_fit);
 
-    // print answer
+    // print answer from best_fit at the end of QTS
     print_solution(items, best_fit);
 
     std::cout << "value: " << calculate_values(items, best_fit) << std::endl;
