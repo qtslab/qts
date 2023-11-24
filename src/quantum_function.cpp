@@ -41,11 +41,9 @@ solution_t measure(solution_t& qindividuals) {
         std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
 
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
-            qubit q = {qindividuals[i].alpha, qindividuals[i].beta, true};
-            solution.push_back(q);
+            solution.push_back({qindividuals[i].alpha, qindividuals[i].beta, true});
         } else {
-            qubit q = {qindividuals[i].alpha, qindividuals[i].beta, false};
-            solution.push_back(q);
+            solution.push_back({qindividuals[i].alpha, qindividuals[i].beta, false});
         }
     }
 
@@ -54,17 +52,6 @@ solution_t measure(solution_t& qindividuals) {
     // }
 
     return solution;
-}
-
-std::vector<solution_t> gen_neighbors(solution_t& qindividuals, int n) {
-    // Apply n measures on the qubits to generate classical solutions
-    // std::cout << "gen_neighbors" << std::endl;
-    std::vector<solution_t> neighbors;
-    for (int i=0; i<n; i++) {
-        neighbors.push_back(measure(qindividuals));
-    }
-
-    return neighbors;
 }
 
 int adjust_solution(items_t& items, solution_t& solution, double capacity) {

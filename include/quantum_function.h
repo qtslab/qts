@@ -8,7 +8,6 @@
 double calculate_weights(items_t& items, solution_t& solution);
 double calculate_values(items_t& items, solution_t& solution);
 solution_t measure(solution_t& qindividuals);
-std::vector<solution_t> gen_neighbors(solution_t& qindividuals, int m);
 int adjust_solution(items_t& items, solution_t& solution, double capacity);
 solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& best_fit);
 solution_t find_best(items_t& items, std::vector<solution_t>& neighbors);
