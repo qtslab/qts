@@ -61,28 +61,6 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     return 0;
 }
 
-solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {
-    solution_t best_sol = neighbors[0];
-    for (auto neighbor : neighbors) {
-        if (calculate_values(items, neighbor) > calculate_values(items, best_sol)) {
-            best_sol = neighbor;
-        }
-    }
-
-    return best_sol;
-}
-
-solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
-    solution_t worst_sol = neighbors[0];
-    for (auto neighbor : neighbors) {
-        if (calculate_values(items, neighbor) < calculate_values(items, worst_sol)) {
-            worst_sol = neighbor;
-        }
-    }
-
-    return worst_sol;
-}
-
 int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list

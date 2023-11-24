@@ -25,16 +25,23 @@ int QTS(items_t& items, double capacity, int max_gen, int N) {
         for (int j=0; j<N; j++) {
             neighbors[j] = measure(qindividuals);
             adjust_solution(items, neighbors[j], capacity);
+            if (j == 0) {
+                best_solution = neighbors[j];
+                worst_solution = neighbors[j];
+            }
+
+            if (calculate_values(items, neighbors[j]) > calculate_values(items, best_solution)) {
+                best_solution = neighbors[j];
+            } else if (calculate_values(items, neighbors[j]) < calculate_values(items, worst_solution)) {
+                worst_solution = neighbors[j];
+            }
         }
 
-        best_solution = find_best(items, neighbors);
-        worst_solution = find_worst(items, neighbors);
         if (calculate_values(items, best_solution) > calculate_values(items, best_fit)) {
             best_fit = best_solution;
         }
 
         update_q(best_solution, worst_solution, qindividuals);
-        // print_solution(items, best_fit); // debug
         print_solution(items, qindividuals, best_fit); // debug
     }
 
