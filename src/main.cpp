@@ -13,7 +13,7 @@ int print_answer(items_t &items, solution_t answer) {
     // print all items
     for (int i=0; i<question_size; i++) {
         std::cout << "weight: " << items[i].weight << " value: " << items[i].value;
-        if (answer[i].take) {
+        if (answer[i]) {
             std::cout << " take";
         } else {
             std::cout << " not take";
@@ -25,7 +25,7 @@ int print_answer(items_t &items, solution_t answer) {
     // print value of the answer
     double value = 0;
     for (int i=0; i<question_size; i++) {
-        if (answer[i].take) {
+        if (answer[i]) {
             value += items[i].value;
         }
     }

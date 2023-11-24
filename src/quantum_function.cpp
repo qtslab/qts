@@ -11,7 +11,7 @@ double calculate_weights(items_t& items, solution_t& solution) {
     // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
     for (int i=0; i<question_size; i++) {
-        weights += items[i].weight * solution[i].take;
+        weights += items[i].weight * solution[i];
     }
 
     return weights;
@@ -22,13 +22,13 @@ double calculate_values(items_t& items, solution_t& solution) {
     // std::cout << "calculate_values" << std::endl;
     double values = 0;
     for (int i=0; i<question_size; i++) {
-        values += items[i].value * solution[i].take;
+        values += items[i].value * solution[i];
     }
 
     return values;
 }
 
-solution_t measure(solution_t& qindividuals) {
+solution_t measure(q_t& qindividuals) {
     // std::cout << "measure" << std::endl;
     solution_t solution;
 
@@ -41,14 +41,14 @@ solution_t measure(solution_t& qindividuals) {
         // std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
 
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
-            solution.push_back({qindividuals[i].alpha, qindividuals[i].beta, true});
+            solution.set(i, true);
         } else {
-            solution.push_back({qindividuals[i].alpha, qindividuals[i].beta, false});
+            solution.set(i, false);
         }
     }
 
     // for (int i=0; i<question_size; i++) {
-    //     std::cout << "solution[" << i << "].take: " << solution[i].take << std::endl;
+    //     std::cout << "solution[" << i << "]: " << solution[i] << std::endl;
     // }
 
     return solution;
@@ -69,7 +69,7 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
         int rand_index = dis(gen);
         weights -= items[rand_index].weight;
         // std::cout << "weights: " << weights << std::endl;
-        solution[rand_index].take = false;
+        solution.set(rand_index, false);
         times++;
     }
 
@@ -103,13 +103,13 @@ solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
     return worst_sol;
 }
 
-int update_q(solution_t& best_sol, solution_t& worst_sol, solution_t& qindividuals) {
+int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
     // std::cout << "update_q" << std::endl;
     const double theta = 0.01 * PI;
     for (int i=0; i<question_size; i++) {
-        int  mod_signal = best_sol[i].take - worst_sol[i].take;
+        int  mod_signal = best_sol[i] - worst_sol[i];
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree
         }

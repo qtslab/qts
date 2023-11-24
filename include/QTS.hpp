@@ -14,7 +14,7 @@ int QTS(items_t& items, double capacity, int max_gen) {
     // initialize QTS
     int n = 10; // Neighbourhood size
 
-    solution_t qindividuals(question_size);
+    q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
 
@@ -37,13 +37,13 @@ int QTS(items_t& items, double capacity, int max_gen) {
 
         update_q(best_solution, worst_solution, qindividuals);
         // print_solution(items, best_fit); // debug
-        print_solution(items, qindividuals); // debug
+        print_solution(items, qindividuals, best_fit); // debug
     }
 
     std::cout << "QTS end" << std::endl;
 
     // print answer from best_fit at the end of QTS
-    print_solution(items, best_fit);
+    print_solution(items, qindividuals, best_fit);
 
     std::cout << "value: " << calculate_values(items, best_fit) << std::endl;
     std::cout << "weight: " << calculate_weights(items, best_fit) << std::endl;

@@ -12,23 +12,16 @@ void print_items(items_t& items) {
     }
 }
 
-void print_solution(items_t& items, solution_t& solution) {
+void print_solution(items_t& items, q_t& q, solution_t& solution) {
     for (int i=0; i<question_size; i++) {
         std::cout << i+1 << ": " << "\tweight: " << items[i].weight << "\tvalue: " << items[i].value << " ";
-        if (solution[i].take) {
+        if (solution[i]) {
             std::cout << "\ttake" << std::endl;
         } else {
             std::cout << "\tnot take" << std::endl;
         }
 
-        std::cout << "\talpha: " << solution[i].alpha*solution[i].alpha << "\tbeta: " << solution[i].beta*solution[i].beta << std::endl;
-    }
-}
-
-void print_neighbors(items_t& items, std::vector<solution_t>& neighbors) {
-    for (int i=0; i<neighbors.size(); i++) {
-        std::cout << "neighbor " << i << std::endl;
-        print_solution(items, neighbors[i]);
+        std::cout << "\talpha: " << q[i].alpha*q[i].alpha << "\tbeta: " << q[i].beta*q[i].beta << std::endl;
     }
 }
 
