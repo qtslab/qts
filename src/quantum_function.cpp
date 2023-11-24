@@ -8,7 +8,6 @@
 
 double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
-    // std::cout << "calculate_weights" << std::endl;
     double weights = 0;
     for (int i=0; i<question_size; i++) {
         weights += items[i].weight * solution[i];
@@ -19,7 +18,6 @@ double calculate_weights(items_t& items, solution_t& solution) {
 
 double calculate_values(items_t& items, solution_t& solution) {
     // Calculate the values of the solution
-    // std::cout << "calculate_values" << std::endl;
     double values = 0;
     for (int i=0; i<question_size; i++) {
         values += items[i].value * solution[i];
@@ -29,17 +27,12 @@ double calculate_values(items_t& items, solution_t& solution) {
 }
 
 solution_t measure(q_t& qindividuals) {
-    // std::cout << "measure" << std::endl;
     solution_t solution;
-
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     for (int i=0; i<question_size; i++) {
         std::uniform_real_distribution<double> dis(0.0, 1.0);
         double rand_observation = dis(gen);
-        // std::cout << "rand_observation in measure: " << rand_observation << std::endl;
-        // std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
-
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
             solution.set(i, true);
         } else {
@@ -47,39 +40,28 @@ solution_t measure(q_t& qindividuals) {
         }
     }
 
-    // for (int i=0; i<question_size; i++) {
-    //     std::cout << "solution[" << i << "]: " << solution[i] << std::endl;
-    // }
-
     return solution;
 }
 
 int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     // Adjust the solution to the capacity constraint
-    // std::cout << "adjust_solution" << std::endl;
     double weights = calculate_weights(items, solution);
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     int times = 1;
-
-    // std::cout << "weights before: " << weights << std::endl; // debug
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         std::uniform_int_distribution<int> dis(0, question_size-times);
         int rand_index = dis(gen);
         weights -= items[rand_index].weight;
-        // std::cout << "weights: " << weights << std::endl;
         solution.set(rand_index, false);
         times++;
     }
 
-    // std::cout << "weights after: " << weights << std::endl; // debug
     return 0;
 }
 
 solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {
-    // Find the best solutions in the neighbors
-    // std::cout << "find_best" << std::endl;
     solution_t best_sol = neighbors[0];
     for (auto neighbor : neighbors) {
         if (calculate_values(items, neighbor) > calculate_values(items, best_sol)) {
@@ -91,8 +73,6 @@ solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {
 }
 
 solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
-    // Find the worst solutions in the neighbors
-    // std::cout << "find_worst" << std::endl;
     solution_t worst_sol = neighbors[0];
     for (auto neighbor : neighbors) {
         if (calculate_values(items, neighbor) < calculate_values(items, worst_sol)) {
@@ -106,7 +86,6 @@ solution_t find_worst(items_t& items, std::vector<solution_t>& neighbors) {
 int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
-    // std::cout << "update_q" << std::endl;
     const double theta = 0.01 * PI;
     for (int i=0; i<question_size; i++) {
         int  mod_signal = best_sol[i] - worst_sol[i];
@@ -121,6 +100,5 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
         // std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
     }
 
-    // std::cout << "update_q end" << std::endl;
     return 0;
 }
