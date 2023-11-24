@@ -20,6 +20,5 @@ struct item {
 using items_t = item[question_size];
 using q_t = std::vector<qubit>;
 using solution_t = std::bitset<question_size>;
-// using solution_t = qubit[question_size];
 
 #endif
