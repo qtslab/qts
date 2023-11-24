@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "QTS: " << std::endl;
     auto QTS_start = std::chrono::high_resolution_clock::now();
-    QTS(items, capacity, max_gen);
+    QTS(items, capacity, max_gen, N);
     auto QTS_end = std::chrono::high_resolution_clock::now();
 
     // std::cout << "PE-QTS: " << std::endl;

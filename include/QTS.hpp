@@ -10,21 +10,19 @@
 #include "quantum_function.h"
 #include "debug.hpp"
 
-int QTS(items_t& items, double capacity, int max_gen) {
+int QTS(items_t& items, double capacity, int max_gen, int N) {
     // initialize QTS
-    int n = 10; // Neighbourhood size
-
     q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
 
     // QTS main loop
-    std::vector<solution_t> neighbors(n); // neighbors in loop
+    std::vector<solution_t> neighbors(N); // neighbors in loop
     solution_t best_solution(question_size); // best solution in loop(one iteration)
     solution_t worst_solution(question_size); // worst solution in loop(one iteration)
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
         std::cout << "QTS_loop: " << i << std::endl; // debug
-        for (int j=0; j<n; j++) {
+        for (int j=0; j<N; j++) {
             neighbors[j] = measure(qindividuals);
             adjust_solution(items, neighbors[j], capacity);
         }

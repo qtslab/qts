@@ -12,6 +12,7 @@
 #define QUESTION_SIZE 100
 */
 
+const int N = 10; // Neighbourhood size
 const double min_value = 1.0;
 const double max_value = 10.0;
 const double min_weight = 1.0;
