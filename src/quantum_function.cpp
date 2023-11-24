@@ -49,6 +49,7 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     int times = 1;
+    std::cout << "weights: " << weights << std::endl;
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         std::uniform_int_distribution<int> dis(0, question_size-times);
@@ -58,6 +59,7 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
         times++;
     }
 
+    std::cout << "weights after: " << weights << std::endl;
     return 0;
 }
 
