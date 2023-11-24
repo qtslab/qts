@@ -38,7 +38,7 @@ solution_t measure(solution_t& qindividuals) {
         std::uniform_real_distribution<double> dis(0.0, 1.0);
         double rand_observation = dis(gen);
         // std::cout << "rand_observation in measure: " << rand_observation << std::endl;
-        std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
+        // std::cout << "qindividuals[" << i << "].beta^2: " << qindividuals[i].beta * qindividuals[i].beta << std::endl;
 
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
             solution.push_back({qindividuals[i].alpha, qindividuals[i].beta, true});
@@ -62,7 +62,7 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
     int times = 1;
 
-    std::cout << "weights before: " << weights << std::endl; // debug
+    // std::cout << "weights before: " << weights << std::endl; // debug
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         std::uniform_int_distribution<int> dis(0, question_size-times);
@@ -73,18 +73,8 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
         times++;
     }
 
-    std::cout << "weights after: " << weights << std::endl; // debug
+    // std::cout << "weights after: " << weights << std::endl; // debug
     return 0;
-}
-
-solution_t new_best_fit(items_t& items, solution_t& new_solution, solution_t& best_fit) {
-    // Compare the new solution with the best fit
-    // std::cout << "new_best_fit" << std::endl;
-    if (calculate_values(items, new_solution) > calculate_values(items, best_fit)) {
-        return new_solution;
-    }
-
-    return best_fit;
 }
 
 solution_t find_best(items_t& items, std::vector<solution_t>& neighbors) {

@@ -14,13 +14,14 @@ void print_items(items_t& items) {
 
 void print_solution(items_t& items, solution_t& solution) {
     for (int i=0; i<question_size; i++) {
-        std::cout << i+1 << ": ";
-        std::cout << "weight: " << items[i].weight << " value: " << items[i].value << " ";
+        std::cout << i+1 << ": " << "\tweight: " << items[i].weight << "\tvalue: " << items[i].value << " ";
         if (solution[i].take) {
-            std::cout << "take" << std::endl;
+            std::cout << "\ttake" << std::endl;
         } else {
-            std::cout << "not take" << std::endl;
+            std::cout << "\tnot take" << std::endl;
         }
+
+        std::cout << "\talpha: " << solution[i].alpha*solution[i].alpha << "\tbeta: " << solution[i].beta*solution[i].beta << std::endl;
     }
 }
 

@@ -20,7 +20,7 @@ const double max_weight = 10.0;
 // const int question_size = 2000; // n_items
 
 // for test
-const int max_gen = 100; // NumIter
+const int max_gen = 1000; // NumIter
 const int question_size = 10; // n_items
 
 #endif
