@@ -93,6 +93,23 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
     return 0;
 }
 
+int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals, double angle) {
+    // Update the qubits popolation applying the quantum gate on each qubit
+    // The movement is not made for those qubits on the tabu list
+    const double theta = angle * PI;
+    for (int i=0; i<question_size; i++) {
+        int  mod_signal = best_sol[i] - worst_sol[i];
+        if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
+            mod_signal *= -1; // fix answer to 0~90 degree
+        }
+
+        qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
+        qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+    }
+
+    return 0;
+}
+
 int sort_solution(items_t& items, std::vector<solution_t>& solutions, std::vector<solution_t>& sorted_solutions) {
     // Sort the solutions by their values
     std::vector<double> values(solutions.size());
