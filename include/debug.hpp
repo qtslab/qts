@@ -37,4 +37,17 @@ void print_solution(items_t& items, q_t& q, solution_t& solution) {
     std::cout << "capacity: " << capacity << std::endl;
 }
 
+int print_result(items_t& items, q_t& q, solution_t& solution) {
+    std::cout << "total value: " << calculate_values(items, solution) << std::endl;
+    std::cout << "total weight: " << calculate_weights(items, solution) << std::endl;
+    double capacity = 0;
+    for (int i=0; i<question_size; i++) {
+        capacity += items[i].weight;
+    }
+
+    capacity /= 2;
+    std::cout << "capacity: " << capacity << std::endl;
+    return 0;
+}
+
 #endif

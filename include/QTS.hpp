@@ -11,15 +11,9 @@
 #include "debug.hpp"
 
 int QTS(items_t& items, double capacity, int max_gen, int N) {
-    // initialize QTS
     q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
-
-    // std::cout << "initial solution: " << std::endl; // debug
-    // print_solution(items, qindividuals, best_fit); // debug
-
-    // QTS main loop
     std::vector<solution_t> neighbors(N); // neighbors in loop
     solution_t best_solution(question_size); // best solution in loop(one iteration)
     solution_t worst_solution(question_size); // worst solution in loop(one iteration)
@@ -48,11 +42,7 @@ int QTS(items_t& items, double capacity, int max_gen, int N) {
         // print_solution(items, qindividuals, best_fit); // debug
     }
 
-    // std::cout << "QTS end" << std::endl;
-
-    // print answer from best_fit at the end of QTS
-    print_solution(items, qindividuals, best_fit);
-
+    // print_result(items, qindividuals, best_fit);
     return 0;
 }
 
