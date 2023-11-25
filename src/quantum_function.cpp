@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <algorithm>
 
 #include "constant.h"
 #include "type.h"
@@ -48,7 +49,6 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     double weights = calculate_weights(items, solution);
     std::random_device rd;  // 取得隨機數種子
     std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
-    std::cout << "weights: " << weights << std::endl;
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         std::uniform_int_distribution<int> dis(0, question_size-1);
@@ -61,16 +61,18 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
         solution.set(rand_index, false);
     }
 
-    // bool over_filled = false;
-    // while (!over_filled) { // underfilled
+    // while (weights < capacity) { // underfilled
     //     // randomly add an item from the solution until fit the capacity
-    //     std::uniform_int_distribution<int> dis(0, question_size-times);
+    //     std::uniform_int_distribution<int> dis(0, question_size-1);
     //     int rand_index = dis(gen);
+    //     if (solution[rand_index] || weights + items[rand_index].weight > capacity) {
+    //         continue;
+    //     }
+
     //     weights += items[rand_index].weight;
     //     solution.set(rand_index, true);
     // }
 
-    std::cout << "weights after: " << weights << std::endl;
     return 0;
 }
 
@@ -84,11 +86,29 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
             mod_signal *= -1; // fix answer to 0~90 degree
         }
 
-        // std::cout << "mod_signal: " << mod_signal << std::endl;
         qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
         qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
-        // std::cout << "qindividuals[" << i << "].alpha: " << qindividuals[i].alpha << std::endl;
-        // std::cout << "qindividuals[" << i << "].beta: " << qindividuals[i].beta << std::endl;
+    }
+
+    return 0;
+}
+
+int sort_solution(items_t& items, std::vector<solution_t>& solutions, std::vector<solution_t>& sorted_solutions) {
+    // Sort the solutions by their values
+    std::vector<double> values(solutions.size());
+    for (int i=0; i<solutions.size(); i++) {
+        values[i] = calculate_values(items, solutions[i]);
+    }
+
+    std::vector<int> index(solutions.size());
+    for (int i=0; i<solutions.size(); i++) {
+        index[i] = i;
+    }
+
+    std::sort(index.begin(), index.end(), [&values](int i1, int i2) {return values[i1] > values[i2];});
+
+    for (int i=0; i<solutions.size(); i++) {
+        sorted_solutions[i] = solutions[index[i]];
     }
 
     return 0;
