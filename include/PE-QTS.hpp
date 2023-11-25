@@ -23,7 +23,7 @@ int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
             adjust_solution(items, neighbors[j], capacity);
         }
 
-        sort_solution(items, neighbors, sorted_neighbors);
+        sort_solution(items, neighbors, sorted_neighbors, N);
         if (calculate_values(items, sorted_neighbors[question_size-1]) > calculate_values(items, best_fit)) {
             best_fit = sorted_neighbors[question_size-1];
         }
@@ -35,7 +35,7 @@ int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
         // print_solution(items, qindividuals, best_fit); // debug
     }
 
-    // print_result(items, qindividuals, best_fit);
+    print_result(items, qindividuals, best_fit);
     return 0;
 }
 

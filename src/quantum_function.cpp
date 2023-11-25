@@ -110,21 +110,21 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals, dou
     return 0;
 }
 
-int sort_solution(items_t& items, std::vector<solution_t>& solutions, std::vector<solution_t>& sorted_solutions) {
+int sort_solution(items_t& items, std::vector<solution_t>& solutions, std::vector<solution_t>& sorted_solutions, int N) {
     // Sort the solutions by their values
-    std::vector<double> values(solutions.size());
-    for (int i=0; i<solutions.size(); i++) {
+    std::vector<double> values(N);
+    for (int i=0; i<N; i++) {
         values[i] = calculate_values(items, solutions[i]);
     }
 
-    std::vector<int> index(solutions.size());
-    for (int i=0; i<solutions.size(); i++) {
+    std::vector<int> index(N);
+    for (int i=0; i<N; i++) {
         index[i] = i;
     }
 
     std::sort(index.begin(), index.end(), [&values](int i1, int i2) {return values[i1] > values[i2];});
 
-    for (int i=0; i<solutions.size(); i++) {
+    for (int i=0; i<N; i++) {
         sorted_solutions[i] = solutions[index[i]];
     }
 
