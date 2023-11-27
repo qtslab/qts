@@ -126,6 +126,7 @@ int sort_solution(items_t& items, std::vector<solution_t>& solutions, std::vecto
 
     for (int i=0; i<N; i++) {
         sorted_solutions[i] = solutions[index[i]];
+        // std::cout << "solution " << i << ": " << values[index[i]] << std::endl;
     }
 
     return 0;
