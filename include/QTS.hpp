@@ -39,10 +39,11 @@ int QTS(items_t& items, double capacity, int max_gen, int N) {
         }
 
         update_q(best_solution, worst_solution, qindividuals);
-        // print_solution(items, qindividuals, best_fit); // debug
+        // print_best_worst(items, qindividuals, best_solution, worst_solution); // debug
+        print_solution(items, qindividuals, best_solution); // debug
     }
 
-    print_result(items, qindividuals, best_fit);
+    // print_result(items, qindividuals, best_fit);
     return 0;
 }
 

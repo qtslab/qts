@@ -14,6 +14,14 @@ void print_items(items_t& items) {
     }
 }
 
+void print_best_worst(items_t& items, q_t& q, solution_t& best, solution_t& worst) {
+    for (int i=0; i<question_size; i++) {
+        std::cout << i+1 << ": " << "\tweight: " << items[i].weight << "\tvalue: " << items[i].value << " ";
+        std::cout << "\tbest: " << best[i] << "\tworst: " << worst[i];
+        std::cout << "\talpha: " << q[i].alpha*q[i].alpha << "\tbeta: " << q[i].beta*q[i].beta << std::endl;
+    }
+}
+
 void print_solution(items_t& items, q_t& q, solution_t& solution) {
     for (int i=0; i<question_size; i++) {
         std::cout << i+1 << ": " << "\tweight: " << items[i].weight << "\tvalue: " << items[i].value << " ";
@@ -23,7 +31,7 @@ void print_solution(items_t& items, q_t& q, solution_t& solution) {
             std::cout << "\tnot take";
         }
 
-        std::cout << "\talpha: " << q[i].alpha*q[i].alpha << "\tbeta: " << q[i].beta*q[i].beta << std::endl;
+        std::cout << "\talpha: " << q[i].alpha*q[i].alpha << "\tbeta: " << q[i].beta*q[i].beta << "\tsum: " << q[i].alpha*q[i].alpha + q[i].beta*q[i].beta << std::endl;
     }
 
     std::cout << "total value: " << calculate_values(items, solution) << std::endl;
