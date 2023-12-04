@@ -101,13 +101,16 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals, dou
     // The movement is not made for those qubits on the tabu list
     const double theta = angle * M_PI;
     for (int i=0; i<question_size; i++) {
-        int  mod_signal = best_sol[i] - worst_sol[i];
+        int  mod_signal = worst_sol[i] - best_sol[i];
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree
         }
 
-        qindividuals[i].alpha = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
-        qindividuals[i].beta = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+        double a = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
+        double b = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+
+        qindividuals[i].alpha = a;
+        qindividuals[i].beta = b;
     }
 
     return 0;
