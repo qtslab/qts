@@ -24,12 +24,12 @@ int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
         }
 
         sort_solution(items, neighbors, sorted_neighbors, N);
-        if (calculate_values(items, sorted_neighbors[question_size-1]) > calculate_values(items, best_fit)) {
-            best_fit = sorted_neighbors[question_size-1];
+        if (calculate_values(items, sorted_neighbors[0]) > calculate_values(items, best_fit)) {
+            best_fit = sorted_neighbors[0];
         }
 
         for (int j=0; j<N/2; j++) {
-            update_q(sorted_neighbors[j], sorted_neighbors[question_size-j-1], qindividuals , 0.01/(j+1));
+            update_q(sorted_neighbors[j], sorted_neighbors[(question_size-1)-j], qindividuals , 0.01/(j+1));
         }
 
         // print_solution(items, qindividuals, best_fit); // debug
