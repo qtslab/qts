@@ -28,7 +28,7 @@ int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
         }
 
         for (int j=0; j<N/2; j++) {
-            update_q(sorted_neighbors[j], sorted_neighbors[(question_size-1)-j], qindividuals , 0.01/(j+1));
+            update_q(sorted_neighbors[j], sorted_neighbors[(question_size-1)-j], qindividuals, 0.01/(j+1));
         }
 
         // print_solution(items, qindividuals, best_fit); // debug
