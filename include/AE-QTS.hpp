@@ -10,7 +10,7 @@
 #include "quantum_function.h"
 #include "debug.hpp"
 
-int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
+int AE_QTS(items_t& items, double capacity, int max_gen, int N) {
     q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);

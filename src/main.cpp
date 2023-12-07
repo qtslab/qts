@@ -7,7 +7,7 @@
 #include "type.h"
 
 #include "QTS.hpp"
-#include "PE-QTS.hpp"
+#include "AE-QTS.hpp"
 
 int main(int argc, char* argv[]) {
     items_t items;
@@ -42,13 +42,13 @@ int main(int argc, char* argv[]) {
     QTS(items, capacity, max_gen, N);
     auto QTS_end = std::chrono::high_resolution_clock::now();
 
-    std::cout << "PE-QTS: " << std::endl;
-    auto PE_QTS_start = std::chrono::high_resolution_clock::now();
-    PE_QTS(items, capacity, max_gen, N);
-    auto PE_QTS_end = std::chrono::high_resolution_clock::now();
+    std::cout << "AE-QTS: " << std::endl;
+    auto AE_QTS_start = std::chrono::high_resolution_clock::now();
+    AE_QTS(items, capacity, max_gen, N);
+    auto AE_QTS_end = std::chrono::high_resolution_clock::now();
 
     std::cout << "QTS time:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(QTS_end - QTS_start).count() << "ns" << std::endl;
-    std::cout << "PE-QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(PE_QTS_end - PE_QTS_start).count() << "ns" << std::endl;
+    std::cout << "AE-QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(AE_QTS_end - AE_QTS_start).count() << "ns" << std::endl;
 
     return 0;
 }
