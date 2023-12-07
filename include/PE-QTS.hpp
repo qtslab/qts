@@ -15,7 +15,6 @@ int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
     std::vector<solution_t> neighbors(N); // neighbors in loop
-    std::vector<solution_t> sorted_neighbors(N); // value sorted solution
     for (int i=0; i<max_gen; i++) { // PE-QTS loop, i = t
         // std::cout << "PE-QTS loop: " << i << std::endl; // debug
         for (int j=0; j<N; j++) {
@@ -23,7 +22,7 @@ int PE_QTS(items_t& items, double capacity, int max_gen, int N) {
             adjust_solution(items, neighbors[j], capacity);
         }
 
-        sort_solution(items, neighbors, sorted_neighbors, N);
+        std::vector<solution_t> sorted_neighbors = sort_solution(items, neighbors, N);
         if (calculate_values(items, sorted_neighbors[0]) > calculate_values(items, best_fit)) {
             best_fit = sorted_neighbors[0];
         }
