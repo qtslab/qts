@@ -2,6 +2,7 @@
 #include <vector>
 #include <map>
 #include <chrono>
+#include <thread>
 
 #include "constant.h"
 #include "type.h"
@@ -37,18 +38,29 @@ int main(int argc, char* argv[]) {
     print_items(items);
     std::cout << std::endl << "Max generation: " << max_gen << std::endl << std::endl;
 
-    std::cout << "QTS: " << std::endl;
-    auto QTS_start = std::chrono::high_resolution_clock::now();
-    QTS(items, capacity, max_gen, N);
-    auto QTS_end = std::chrono::high_resolution_clock::now();
+    std::thread threads[1000];
+    for (int i=0; i<1000; i++) {
+        threads[i] = std::thread(QTS, std::ref(items), capacity, max_gen, N);
+    }
 
-    std::cout << "AE-QTS: " << std::endl;
+    auto QTS_start = std::chrono::high_resolution_clock::now();
+    for (int i=0; i<1000; i++) {
+        threads[i].join();
+    }
+
+    auto QTS_end = std::chrono::high_resolution_clock::now();
+    for (int i=0; i<1000; i++) {
+        threads[i] = std::thread(AE_QTS, std::ref(items), capacity, max_gen, N);
+    }
+
     auto AE_QTS_start = std::chrono::high_resolution_clock::now();
-    AE_QTS(items, capacity, max_gen, N);
+    for (int i=0; i<1000; i++) {
+        threads[i].join();
+    }
+
     auto AE_QTS_end = std::chrono::high_resolution_clock::now();
 
     std::cout << "QTS time:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(QTS_end - QTS_start).count() << "ns" << std::endl;
     std::cout << "AE-QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(AE_QTS_end - AE_QTS_start).count() << "ns" << std::endl;
-
     return 0;
 }

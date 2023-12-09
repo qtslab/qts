@@ -36,10 +36,10 @@ int AE_QTS(items_t& items, double capacity, int max_gen, int N) {
         }
 
         // print_solution(items, qindividuals, best_fit); // debug
-        record_iter(fout, items, qindividuals, best_fit, i); // record
+        record_iter(fout, calculate_values(items, best_fit), i); // record
     }
 
-    print_result(items, qindividuals, best_fit);
+    // print_result(items, qindividuals, best_fit);
     fout.close();
     return 0;
 }
