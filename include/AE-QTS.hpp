@@ -4,13 +4,17 @@
 #include <random>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
 #include "debug.hpp"
+#include "record.hpp"
 
 int AE_QTS(items_t& items, double capacity, int max_gen, int N) {
+    std::ofstream fout("csv/AE-QTS.csv");
+
     q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
@@ -32,6 +36,7 @@ int AE_QTS(items_t& items, double capacity, int max_gen, int N) {
         }
 
         // print_solution(items, qindividuals, best_fit); // debug
+        record_iter(fout, items, qindividuals, best_fit, i); // record
     }
 
     print_result(items, qindividuals, best_fit);
