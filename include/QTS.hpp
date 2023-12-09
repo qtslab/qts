@@ -48,6 +48,7 @@ int QTS(items_t& items, double capacity, int max_gen, int N) {
     }
 
     print_result(items, qindividuals, best_fit);
+    fout.close();
     return 0;
 }
 
