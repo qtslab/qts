@@ -10,6 +10,6 @@ const double min_weight = 1.0;
 const double max_weight = 10.0;
 const int max_gen = 1000; // NumIter
 const int question_size = 1000; // n_items
-const int test_times = 1000;
+const int test_times = 1;
 
 #endif
