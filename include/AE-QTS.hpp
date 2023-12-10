@@ -12,9 +12,7 @@
 #include "debug.hpp"
 #include "record.hpp"
 
-int AE_QTS(items_t& items, double capacity, int max_gen, int N) {
-    std::ofstream fout("csv/AE-QTS.csv");
-
+int AE_QTS(items_t& items, double capacity, int max_gen, int N, std::vector<double>& record) {
     q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
@@ -35,12 +33,9 @@ int AE_QTS(items_t& items, double capacity, int max_gen, int N) {
             update_q(sorted_neighbors[j], sorted_neighbors[(N-1)-j], qindividuals, 0.01/(j+1));
         }
 
-        // print_solution(items, qindividuals, best_fit); // debug
-        record_iter(fout, calculate_values(items, best_fit), i); // record
+        record[i] = calculate_values(items, best_fit);
     }
 
-    // print_result(items, qindividuals, best_fit);
-    fout.close();
     return 0;
 }
 
