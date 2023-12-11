@@ -12,7 +12,7 @@
 #include "debug.hpp"
 #include "record.hpp"
 
-int AE_QTS(items_t& items, double capacity, int max_gen, int N, std::vector<double>& record) {
+int TS(items_t& items, double capacity, int max_gen, int N, std::vector<double>& record) {
     q_t qindividuals(question_size);
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
@@ -36,7 +36,6 @@ int AE_QTS(items_t& items, double capacity, int max_gen, int N, std::vector<doub
         record[i] = calculate_values(items, best_fit);
     }
 
-    // print_result(items, qindividuals, best_fit);
     return 0;
 }
 

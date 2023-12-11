@@ -16,7 +16,21 @@
 int main(int argc, char* argv[]) {
     items_t items;
     double capacity = 0;
-    case_II(items, capacity, max_gen, N);
+    /// Case III
+    for (int i=0; i<question_size; i++) {
+        int value = (i % 10) + 1;
+        items[i].weight = value;
+        items[i].value = value + 5;
+    }
+
+    for (int i=0; i<question_size; i++) {
+        capacity += items[i].weight;
+    }
+
+    capacity /= 2;
+    /// case end
+
+    // print the items and capacity
     std::cout << "capacity: " << capacity << std::endl;
     std::cout << "items: " << std::endl;
     print_items(items);

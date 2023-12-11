@@ -44,6 +44,7 @@ int QTS(items_t& items, double capacity, int max_gen, int N, std::vector<double>
         record[i] = calculate_values(items, best_fit);
     }
 
+    // print_result(items, qindividuals, best_fit);
     return 0;
 }
 
