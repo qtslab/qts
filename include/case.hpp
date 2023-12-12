@@ -7,10 +7,15 @@
 #include "constant.h"
 
 int case_I(items_t& items, double& capacity, int max_gen, int N) {
+    std::random_device rd;
+    std::mt19937 gen(rd());
     for (int i=0; i<question_size; i++) {
-        int value = (i % 10) + 1;
-        items[i].weight = value;
-        items[i].value = value + 5;
+        std::uniform_real_distribution<double> weight_dis(min_weight, max_weight);
+        items[i].weight = weight_dis(gen);
+    }
+
+    for (int i=0; i<question_size; i++) {
+        items[i].value = items[i].weight + 5;
     }
 
     for (int i=0; i<question_size; i++) {
@@ -23,7 +28,7 @@ int case_I(items_t& items, double& capacity, int max_gen, int N) {
 
 int case_II(items_t& items, double& capacity, int max_gen, int N) {
     for (int i=0; i<question_size; i++) {
-        items[i].weight = question_size%10 + 1;
+        items[i].weight = i%10 + 1;
     }
 
     std::random_device rd;
@@ -41,11 +46,10 @@ int case_II(items_t& items, double& capacity, int max_gen, int N) {
     return 0;
 }
 
-int case_III(items_t& items, double capacity, int max_gen, int N) {
+int case_III(items_t& items, double& capacity, int max_gen, int N) {
     for (int i=0; i<question_size; i++) {
-        int value = (i % 10) + 1;
-        items[i].weight = value;
-        items[i].value = value + 5;
+        items[i].weight = (i % 10) + 1;
+        items[i].value = items[i].weight + 5;
     }
 
     for (int i=0; i<question_size; i++) {
