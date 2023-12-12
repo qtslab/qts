@@ -43,8 +43,12 @@ cmake --build build
 修改完畢請重新編譯。
 
 如果要修改不同的 case 來執行，
-請到 `main.cpp` 中的函式修改，
+請到 `/src/main.cpp` 中的函式修改，
 例如 `case_III(items, capacity, max_gen, N);`。
+
+要修改旋轉角度的話，
+QTS 呼叫的是在 `/src/quantum_function.cpp` 中使用多載的 `updateQ()` 函式(三個參數，參數中不含角度)，
+AE-QTS 的 `updateQ()` 函式也在相同檔案中，使用多載的 `updateQ()` 函式(四個參數，參數中含角度)。
 
 ### 輸出檔案
 
