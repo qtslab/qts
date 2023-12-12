@@ -17,8 +17,8 @@ int AE_QTS(items_t& items, double capacity, int max_gen, int N, std::vector<doub
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
     std::vector<solution_t> neighbors(N); // neighbors in loop
-    for (int i=0; i<max_gen; i++) { // PE-QTS loop, i = t
-        // std::cout << "PE-QTS loop: " << i << std::endl; // debug
+    for (int i=0; i<max_gen; i++) { // AE-QTS loop, i = t
+        // std::cout << "AE-QTS loop: " << i << std::endl; // debug
         for (int j=0; j<N; j++) {
             neighbors[j] = measure(qindividuals);
             adjust_solution(items, neighbors[j], capacity);
