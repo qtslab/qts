@@ -42,6 +42,10 @@ cmake --build build
 除了旋轉角度外的參數都可以在 `/include/constant.cpp` 中修改，
 修改完畢請重新編譯。
 
+如果要修改不同的 case 來執行，
+請到 `main.cpp` 中的函式修改，
+例如 `case_III(items, capacity, max_gen, N);`。
+
 ### 輸出檔案
 
 輸出檔案為 `./csv/QTS.csv`，
