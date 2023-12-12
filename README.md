@@ -22,9 +22,25 @@ QTS：
         量子位元： q
             量子態： alpha, beta
 
-## QTS
+## 使用說明
 
-conponents: MAX_GEN, Q(0), Q(1), ..., Q(MAX_GEN), tabu list T
+### 編譯
+
+```bash
+cmake -B build
+cmake --build build
+```
+
+### 執行
+
+```bash
+./build/qts
+```
+
+### 修改參數
+
+除了旋轉角度外的參數都可以在 `/include/constant.cpp` 中修改，
+修改完畢請重新編譯。
 
 ## 比較
 
