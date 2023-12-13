@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     items_t items;
     double capacity = 0;
     // Case start
-    case_III(items, capacity, max_gen, N); // set case
+    case_I(items, capacity, max_gen, N); // set case
     // case end
 
     // print the items and capacity
