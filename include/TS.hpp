@@ -1,5 +1,5 @@
-#ifndef PE_QTS_HPP
-#define PE_QTS_HPP
+#ifndef TS_HPP
+#define TS_HPP
 
 #include <random>
 #include <iostream>
