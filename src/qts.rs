@@ -1,4 +1,4 @@
-use crate::types::{qubit, Items, Qubits, Solution};
+use crate::types::{Items, Qubits, Solution};
 use crate::quantum::{
     calculate_weights,
     calculate_values,
@@ -8,7 +8,7 @@ use crate::quantum::{
 };
 
 pub fn qts(items: &Items, capacity: f64, max_gen: i32, N: i32) -> Solution {
-    let mut qubits: Qubits = Vec::new();
+    let mut qubits: Qubits = Qubits::new();
     let mut best_fit: Solution = Vec::new();
     adjust_solution(&items, &best_fit, capacity);
     let mut neighbors: Vec<Solution> = vec![Vec::new(); N as usize];

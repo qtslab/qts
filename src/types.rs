@@ -10,6 +10,15 @@ pub struct item {
     pub weight: f64,
 }
 
+pub struct problem {
+    pub size: i32,
+    pub capacity: f64,
+    pub max_weight: f64,
+    pub max_value: f64,
+    pub min_weight: f64,
+    pub min_value: f64,
+}
+
 impl item {
     fn new(value: f64, weight: f64) -> item {
         item {

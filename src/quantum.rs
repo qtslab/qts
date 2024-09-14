@@ -1,4 +1,4 @@
-use crate::types::{qubit, Items, Qubits, Solution};
+use crate::types::{Items, Qubits, Solution};
 
 use rand::Rng;
 
