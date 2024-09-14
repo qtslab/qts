@@ -82,7 +82,7 @@ pub fn update_qubits_with_angle(best_sol: Solution, worst_sol: Solution, qubits:
     0
 }
 
-pub fn sort_soution(items: &Items, solutions: Vec<Solution>, N: i32) -> Vec<Solution> {
+pub fn sort_solution(items: &Items, solutions: Vec<Solution>, N: i32) -> Vec<Solution> {
     let mut sorted_solutions: Vec<Solution> = solutions.clone();
     let mut values: Vec<f64> = Vec::new();
     for solution in &solutions {
