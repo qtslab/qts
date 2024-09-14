@@ -2,7 +2,7 @@ use crate::types::{Items, Qubits, Solution};
 
 use rand::Rng;
 
-pub fn calculate_weights(items: &Items, solution: &Solution) -> f64{
+pub fn calculate_weights(items: &Items, solution: &Solution) -> f64 {
     let mut weight: f64 = 0.0;
     for i in 0..items.len() {
         if solution[i] {
@@ -33,6 +33,7 @@ pub fn measure(qubits: &Qubits) -> Solution {
             solution.push(false);
         }
     }
+
     solution
 }
 

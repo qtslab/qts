@@ -1,12 +1,13 @@
 use std::f64::consts::SQRT_2;
 
+#[derive(Clone)]
 pub struct qubit {
     pub alpha: f64,
     pub beta: f64,
 }
 
-impl qubit {
-    fn new(alpha: f64, beta: f64) -> qubit {
+impl Default for qubit {
+    fn default() -> Self {
         qubit {
             alpha: 1.0 / SQRT_2,
             beta: 1.0 / SQRT_2,
