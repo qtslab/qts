@@ -5,18 +5,20 @@ pub struct qubit {
     pub beta: f64,
 }
 
+impl qubit {
+    fn new(alpha: f64, beta: f64) -> qubit {
+        qubit {
+            alpha: 1.0 / SQRT_2,
+            beta: 1.0 / SQRT_2,
+        }
+    }
+}
+
+#[derive(Clone)]
+#[derive(Default)]
 pub struct item {
     pub value: f64,
     pub weight: f64,
-}
-
-pub struct problem {
-    pub size: i32,
-    pub capacity: f64,
-    pub max_weight: f64,
-    pub max_value: f64,
-    pub min_weight: f64,
-    pub min_value: f64,
 }
 
 impl item {
@@ -28,11 +30,24 @@ impl item {
     }
 }
 
-impl qubit {
-    fn new(alpha: f64, beta: f64) -> qubit {
-        qubit {
-            alpha: 1.0 / SQRT_2,
-            beta: 1.0 / SQRT_2,
+pub struct problem {
+    pub size: i32,
+    pub capacity: f64,
+    pub max_weight: f64,
+    pub max_value: f64,
+    pub min_weight: f64,
+    pub min_value: f64,
+}
+
+impl Default for problem {
+    fn default() -> Self {
+        problem {
+            size: 20,
+            capacity: 0.0,
+            max_weight: 10.0,
+            max_value: 10.0,
+            min_weight: 1.0,
+            min_value: 1.0,
         }
     }
 }
