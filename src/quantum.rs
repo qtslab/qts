@@ -1,5 +1,7 @@
 use crate::types::{Items, Qubits, Solution};
 
+use rand::Rng;
+
 pub fn calculate_weights(items: &Items, solution: Solution) -> f64{
     let mut weight: f64 = 0.0;
     for i in 0..items.len() {
@@ -22,6 +24,16 @@ pub fn calculate_values(items: &Items, solution: Solution) -> f64 {
 
 pub fn measure(qubits: &Qubits) -> Solution {
     let mut solution: Solution = Vec::new();
+    for qubit in qubits {
+        let mut rng = rand::thread_rng();
+        let r: f64 = rng.gen();
+        if r < qubit.alpha.powi(2) {
+            solution.push(true);
+        } else {
+            solution.push(false);
+        }
+    }
+    solution
 }
 
 pub fn adjust_solution(items: &Items, solution: Solution, qubits: &Qubits) -> i32 {
