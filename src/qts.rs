@@ -39,11 +39,11 @@ pub fn qts(items: &Items, capacity: f64, max_gen: i32, N: i32) -> Solution {
             }
         }
 
-        if calculate_values(items, &best_solution) > calculate_values(items, &worst_solution) {
+        if calculate_values(items, &best_solution) > calculate_values(items, &best_fit) {
             best_fit = best_solution.clone();
         }
 
-        print_solution(items, &best_solution);
+        print_solution(items, &best_fit);
         update_qubits(best_solution.clone(), worst_solution.clone(), &mut qubits);
     }
 
