@@ -1,10 +1,18 @@
+use std::{f64::consts::SQRT_2};
+
 use crate::types::{Items, Solution, Qubits};
 
 pub fn print_items(items: &Items) {
     for i in 0..items.len() {
-        println!("Item {}: value = {}, weight = {}", i, items[i as usize].value, items[i as usize].weight);
+        println!(
+            "Item {}: value = {:.3}, weight = {:.3}",
+            i,
+            items[i as usize].value,
+            items[i as usize].weight
+        );
     }
 }
+
 
 pub fn print_best_worst(best: &Solution, worst: &Solution) {
     println!("Best solution: ");
@@ -21,7 +29,12 @@ pub fn print_best_worst(best: &Solution, worst: &Solution) {
 
 pub fn print_qubits(qubits: &Qubits) {
     for i in 0..qubits.len() {
-        println!("Qubit {}: alpha = {}, beta = {}", i, qubits[i as usize].alpha, qubits[i as usize].beta);
+        println!(
+            "Qubit {}: alpha = {:.3}, beta = {:.3}",
+            i,
+            qubits[i as usize].alpha / SQRT_2,
+            qubits[i as usize].beta / SQRT_2
+        );
     }
 }
 
@@ -34,5 +47,8 @@ pub fn print_solution(items: &Items, solution: &Solution) {
             total_weight += items[i as usize].weight;
         }
     }
-    println!("Total value: {}, Total weight: {}", total_value, total_weight);
+    println!(
+        "Total value: {:.3}, Total weight: {:.3}",
+        total_value, total_weight
+    );
 }
