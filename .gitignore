@@ -1,6 +1,17 @@
 /build
-*.DS_Store
+/dist
+
+/csv
+
 /.vscode
 /.idea
-/csv
 /.cache
+
+*.DS_Store
+
+*.out
+*.exe
+
+# Added by cargo
+
+/target
