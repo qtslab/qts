@@ -3,6 +3,7 @@ mod types;
 mod case;
 mod quantum;
 mod debug;
+mod record;
 
 use crate::qts::qts;
 use crate::types::{problem, Items};

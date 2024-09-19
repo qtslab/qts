@@ -1,13 +1,10 @@
-use crate::types::{Items, Qubits, Solution};
 use crate::quantum::{
-    calculate_weights,
-    calculate_values,
-    measure,
-    adjust_solution,
-    update_qubits
+    adjust_solution, calculate_values, calculate_weights, measure, update_qubits,
 };
+use crate::types::{Items, Qubits, Solution};
 
 use crate::debug::{print_qubits, print_solution};
+use crate::record::record_iter;
 
 pub fn qts(items: &Items, capacity: f64, max_gen: i32, N: i32) -> Solution {
     let mut qubits: Qubits = vec![Default::default(); items.len()];
@@ -26,9 +23,13 @@ pub fn qts(items: &Items, capacity: f64, max_gen: i32, N: i32) -> Solution {
                 worst_solution = neighbors[j as usize].clone();
             }
 
-            if calculate_values(items, &neighbors[j as usize]) > calculate_values(items, &best_solution) {
+            if calculate_values(items, &neighbors[j as usize])
+                > calculate_values(items, &best_solution)
+            {
                 best_solution = neighbors[j as usize].clone();
-            } else if calculate_values(items, &neighbors[j as usize]) < calculate_values(items, &worst_solution) {
+            } else if calculate_values(items, &neighbors[j as usize])
+                < calculate_values(items, &worst_solution)
+            {
                 worst_solution = neighbors[j as usize].clone();
             }
         }
@@ -38,10 +39,10 @@ pub fn qts(items: &Items, capacity: f64, max_gen: i32, N: i32) -> Solution {
         }
 
         print_solution(items, &best_fit);
-        print_qubits(&qubits);
+        // print_qubits(&qubits);
+        record_iter("output.csv", i, calculate_values(items, &best_fit));
         update_qubits(best_solution.clone(), worst_solution.clone(), &mut qubits);
     }
 
     best_fit
 }
-
