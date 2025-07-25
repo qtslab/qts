@@ -11,23 +11,43 @@
 #include "quantum_function.h"
 
 double calculate_weights(items_t& items, solution_t& solution) {
-    // Calculate the weights of the solution
-    double weights = 0;
-    for (int i=0; i<question_size; i++) {
-        weights += items[i].weight * solution[i];
+    // Calculate the weights of the solution using Kokkos parallel reduction
+    if (Kokkos::is_initialized()) {
+        double weights = 0.0;
+        Kokkos::parallel_reduce("calculate_weights",
+            Kokkos::RangePolicy<>(0, question_size),
+            KOKKOS_LAMBDA(const int i, double& local_sum) {
+                local_sum += items[i].weight * solution[i];
+            }, weights);
+        return weights;
+    } else {
+        // Fallback sequential implementation
+        double weights = 0;
+        for (int i=0; i<question_size; i++) {
+            weights += items[i].weight * solution[i];
+        }
+        return weights;
     }
-
-    return weights;
 }
 
 double calculate_values(items_t& items, solution_t& solution) {
-    // Calculate the values of the solution
-    double values = 0;
-    for (int i=0; i<question_size; i++) {
-        values += items[i].value * solution[i];
+    // Calculate the values of the solution using Kokkos parallel reduction
+    if (Kokkos::is_initialized()) {
+        double values = 0.0;
+        Kokkos::parallel_reduce("calculate_values",
+            Kokkos::RangePolicy<>(0, question_size),
+            KOKKOS_LAMBDA(const int i, double& local_sum) {
+                local_sum += items[i].value * solution[i];
+            }, values);
+        return values;
+    } else {
+        // Fallback sequential implementation
+        double values = 0;
+        for (int i=0; i<question_size; i++) {
+            values += items[i].value * solution[i];
+        }
+        return values;
     }
-
-    return values;
 }
 
 solution_t measure(q_t& qindividuals) {
@@ -119,40 +139,112 @@ int adjust_solution(items_t& items, solution_t& solution, double capacity) {
 }
 
 int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
-    // Update the qubits popolation applying the quantum gate on each qubit
-    // The movement is not made for those qubits on the tabu list
+    // Update the qubits population applying the quantum gate on each qubit using Kokkos
     const double theta = 0.01 * M_PI;
-    for (int i=0; i<question_size; i++) {
-        int  mod_signal = best_sol[i] - worst_sol[i];
-        if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
-            mod_signal *= -1; // fix answer to 0~90 degree
+
+    if (Kokkos::is_initialized()) {
+        // Create views for alpha and beta values
+        Kokkos::View<double*> alpha_view("alpha_view", question_size);
+        Kokkos::View<double*> beta_view("beta_view", question_size);
+
+        // Copy current values to views
+        for (int i = 0; i < question_size; i++) {
+            alpha_view(i) = qindividuals[i].alpha;
+            beta_view(i) = qindividuals[i].beta;
         }
 
-        double a = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
-        double b = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+        Kokkos::parallel_for("update_q",
+            Kokkos::RangePolicy<>(0, question_size),
+            KOKKOS_LAMBDA(const int i) {
+                int mod_signal = best_sol[i] - worst_sol[i];
+                if (alpha_view(i) * beta_view(i) < 0) {
+                    mod_signal *= -1; // fix answer to 0~90 degree
+                }
 
-        qindividuals[i].alpha = a;
-        qindividuals[i].beta = b;
+                double a = cos(mod_signal*theta)*alpha_view(i) - sin(mod_signal*theta)*beta_view(i);
+                double b = sin(mod_signal*theta)*alpha_view(i) + cos(mod_signal*theta)*beta_view(i);
+
+                alpha_view(i) = a;
+                beta_view(i) = b;
+            });
+
+        Kokkos::fence();
+
+        // Copy results back to qindividuals
+        for (int i = 0; i < question_size; i++) {
+            qindividuals[i].alpha = alpha_view(i);
+            qindividuals[i].beta = beta_view(i);
+        }
+    } else {
+        // Fallback sequential implementation
+        for (int i=0; i<question_size; i++) {
+            int mod_signal = best_sol[i] - worst_sol[i];
+            if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
+                mod_signal *= -1; // fix answer to 0~90 degree
+            }
+
+            double a = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
+            double b = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+
+            qindividuals[i].alpha = a;
+            qindividuals[i].beta = b;
+        }
     }
 
     return 0;
 }
 
 int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals, double angle) {
-    // Update the qubits popolation applying the quantum gate on each qubit
-    // The movement is not made for those qubits on the tabu list
+    // Update the qubits population applying the quantum gate on each qubit using Kokkos
     const double theta = angle * M_PI;
-    for (int i=0; i<question_size; i++) {
-        int mod_signal = best_sol[i] - worst_sol[i];
-        if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
-            mod_signal *= -1; // fix answer to 0~90 degree
+
+    if (Kokkos::is_initialized()) {
+        // Create views for alpha and beta values
+        Kokkos::View<double*> alpha_view("alpha_view", question_size);
+        Kokkos::View<double*> beta_view("beta_view", question_size);
+
+        // Copy current values to views
+        for (int i = 0; i < question_size; i++) {
+            alpha_view(i) = qindividuals[i].alpha;
+            beta_view(i) = qindividuals[i].beta;
         }
 
-        double a = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
-        double b = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+        Kokkos::parallel_for("update_q_angle",
+            Kokkos::RangePolicy<>(0, question_size),
+            KOKKOS_LAMBDA(const int i) {
+                int mod_signal = best_sol[i] - worst_sol[i];
+                if (alpha_view(i) * beta_view(i) < 0) {
+                    mod_signal *= -1; // fix answer to 0~90 degree
+                }
 
-        qindividuals[i].alpha = a;
-        qindividuals[i].beta = b;
+                double a = cos(mod_signal*theta)*alpha_view(i) - sin(mod_signal*theta)*beta_view(i);
+                double b = sin(mod_signal*theta)*alpha_view(i) + cos(mod_signal*theta)*beta_view(i);
+
+                alpha_view(i) = a;
+                beta_view(i) = b;
+            });
+
+        Kokkos::fence();
+
+        // Copy results back to qindividuals
+        for (int i = 0; i < question_size; i++) {
+            qindividuals[i].alpha = alpha_view(i);
+            qindividuals[i].beta = beta_view(i);
+        }
+    } else {
+        // Fallback sequential implementation
+        for (int i=0; i<question_size; i++) {
+            int mod_signal = best_sol[i] - worst_sol[i];
+            if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
+                mod_signal *= -1; // fix answer to 0~90 degree
+            }
+
+            double a = cos(mod_signal*theta)*qindividuals[i].alpha - sin(mod_signal*theta)*qindividuals[i].beta;
+            double b = sin(mod_signal*theta)*qindividuals[i].alpha + cos(mod_signal*theta)*qindividuals[i].beta;
+
+            qindividuals[i].alpha = a;
+            qindividuals[i].beta = b;
+        }
     }
 
     return 0;
