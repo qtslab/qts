@@ -12,6 +12,4 @@
 *.out
 *.exe
 
-# Added by cargo
-
-/target
+/external
