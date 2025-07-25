@@ -6,6 +6,8 @@
 #include <vector>
 #include <fstream>
 
+#include <Kokkos_Core.hpp>
+
 #include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
@@ -19,8 +21,11 @@ int QTS(items_t& items, double capacity, int max_gen, int N, std::vector<double>
     std::vector<solution_t> neighbors(N); // neighbors in loop
     solution_t best_solution(question_size); // best solution in loop(one iteration)
     solution_t worst_solution(question_size); // worst solution in loop(one iteration)
+
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
         // std::cout << "QTS_loop: " << i << std::endl; // debug
+
+        // Sequential generation of neighbors (due to random number complexity and dependencies)
         for (int j=0; j<N; j++) {
             neighbors[j] = measure(qindividuals);
             adjust_solution(items, neighbors[j], capacity);
@@ -40,6 +45,7 @@ int QTS(items_t& items, double capacity, int max_gen, int N, std::vector<double>
             best_fit = best_solution;
         }
 
+        // update_q is internally parallelized with Kokkos
         update_q(best_solution, worst_solution, qindividuals);
         record[i] = calculate_values(items, best_fit);
     }
