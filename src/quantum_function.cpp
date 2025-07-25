@@ -3,6 +3,9 @@
 #include <vector>
 #include <algorithm>
 
+#include <Kokkos_Core.hpp>
+#include <Kokkos_Random.hpp>
+
 #include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
@@ -29,15 +32,54 @@ double calculate_values(items_t& items, solution_t& solution) {
 
 solution_t measure(q_t& qindividuals) {
     solution_t solution;
-    std::random_device rd;  // 取得隨機數種子
-    std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
-    for (int i=0; i<question_size; i++) {
+
+    // Only use Kokkos if initialized and not in a multithreaded context problem
+    if (Kokkos::is_initialized()) {
+        // Use host execution space to avoid device memory issues
+        using HostSpace = Kokkos::DefaultHostExecutionSpace;
+
+        // Create a simple host parallel implementation
+        Kokkos::View<bool*, HostSpace> solution_view("solution_view", question_size);
+
+        // Create random pool with different seed
+        Kokkos::Random_XorShift64_Pool<HostSpace> rand_pool(std::chrono::high_resolution_clock::now().time_since_epoch().count());
+
+        // Use parallel_for with host execution
+        Kokkos::parallel_for("measure",
+            Kokkos::RangePolicy<HostSpace>(0, question_size),
+            KOKKOS_LAMBDA(const int i) {
+                auto gen = rand_pool.get_state();
+                double rand_observation = gen.drand(0.0, 1.0);
+
+                if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
+                    solution_view(i) = false;
+                } else {
+                    solution_view(i) = true;
+                }
+
+                rand_pool.free_state(gen);
+            });
+
+        // Wait for completion
+        Kokkos::fence();
+
+        // Copy results back to solution bitset
+        for (int i = 0; i < question_size; i++) {
+            solution.set(i, solution_view(i));
+        }
+    } else {
+        // Fallback to sequential implementation
+        std::random_device rd;
+        std::mt19937 gen(rd());
         std::uniform_real_distribution<double> dis(0.0, 1.0);
-        double rand_observation = dis(gen);
-        if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
-            solution.set(i, false);
-        } else {
-            solution.set(i, true);
+
+        for (int i = 0; i < question_size; i++) {
+            double rand_observation = dis(gen);
+            if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
+                solution.set(i, false);
+            } else {
+                solution.set(i, true);
+            }
         }
     }
 
