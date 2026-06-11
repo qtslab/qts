@@ -12,6 +12,7 @@
 
 #include "QTS.hpp"
 #include "AE-QTS.hpp"
+#include "DP.hpp"
 
 int main(int argc, char* argv[]) {
     items_t items;
@@ -25,6 +26,12 @@ int main(int argc, char* argv[]) {
     std::cout << "items: " << std::endl;
     print_items(items);
     std::cout << std::endl << "Max generation: " << max_gen << std::endl << std::endl;
+
+    // DP baseline：求精確（整數重量）/ 近似（實數重量）最佳解，作為收斂對照線
+    auto DP_start = std::chrono::high_resolution_clock::now();
+    double DP_optimal = DP(items, capacity);
+    auto DP_end = std::chrono::high_resolution_clock::now();
+    std::cout << "DP optimal:  " << DP_optimal << std::endl << std::endl;
 
     std::thread threads[test_times];
     // 維度是 [run][gen]：外層每條 run（test_times）各一個 vector，
@@ -59,6 +66,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "QTS time:    " << std::chrono::duration_cast<std::chrono::nanoseconds>(QTS_end - QTS_start).count() << "ns" << std::endl;
     std::cout << "AE-QTS time: " << std::chrono::duration_cast<std::chrono::nanoseconds>(AE_QTS_end - AE_QTS_start).count() << "ns" << std::endl;
+    std::cout << "DP time:     " << std::chrono::duration_cast<std::chrono::nanoseconds>(DP_end - DP_start).count() << "ns" << std::endl;
 
     std::ofstream fout("csv/QTS.csv");
     for (int i=0; i<max_gen; i++) {
@@ -68,7 +76,8 @@ int main(int argc, char* argv[]) {
             AE_QTS_sum += AE_QTS_records[j][i];
         }
 
-        fout << i << "," << QTS_sum/test_times << "," << AE_QTS_sum/test_times << std::endl;
+        // 第 4 欄為 DP 最佳解，每代皆相同，於圖表中為一條水平基準線
+        fout << i << "," << QTS_sum/test_times << "," << AE_QTS_sum/test_times << "," << DP_optimal << std::endl;
     }
 
     fout.close();
