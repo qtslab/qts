@@ -29,21 +29,25 @@ int main(int argc, char* argv[]) {
     std::thread threads[test_times];
     std::vector<std::vector<double>> QTS_records(max_gen, std::vector<double>(test_times));
     std::vector<std::vector<double>> AE_QTS_records(max_gen, std::vector<double>(test_times));
+    // start 必須放在 launch 迴圈之前：thread 一建立就開始執行，
+    // 若放在 launch 之後才取時間，會漏算 launch 期間（含建立 thread 本身）
+    // 已經完成的工作。
+    auto QTS_start = std::chrono::high_resolution_clock::now();
     for (int i=0; i<test_times; i++) {
         threads[i] = std::thread(QTS, std::ref(items), capacity, max_gen, N, std::ref(QTS_records[i]));
     }
 
-    auto QTS_start = std::chrono::high_resolution_clock::now();
     for (int i=0; i<test_times; i++) {
         threads[i].join();
     }
 
     auto QTS_end = std::chrono::high_resolution_clock::now();
+
+    auto AE_QTS_start = std::chrono::high_resolution_clock::now();
     for (int i=0; i<test_times; i++) {
         threads[i] = std::thread(AE_QTS, std::ref(items), capacity, max_gen, N, std::ref(AE_QTS_records[i]));
     }
 
-    auto AE_QTS_start = std::chrono::high_resolution_clock::now();
     for (int i=0; i<test_times; i++) {
         threads[i].join();
     }
