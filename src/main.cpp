@@ -27,8 +27,11 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl << "Max generation: " << max_gen << std::endl << std::endl;
 
     std::thread threads[test_times];
-    std::vector<std::vector<double>> QTS_records(max_gen, std::vector<double>(test_times));
-    std::vector<std::vector<double>> AE_QTS_records(max_gen, std::vector<double>(test_times));
+    // 維度是 [run][gen]：外層每條 run（test_times）各一個 vector，
+    // 內層存該 run 每一代（max_gen）的紀錄。寫入端（record[gen]）與
+    // 輸出端（records[run][gen]）都依此索引，故外層須為 test_times、內層 max_gen。
+    std::vector<std::vector<double>> QTS_records(test_times, std::vector<double>(max_gen));
+    std::vector<std::vector<double>> AE_QTS_records(test_times, std::vector<double>(max_gen));
     // start 必須放在 launch 迴圈之前：thread 一建立就開始執行，
     // 若放在 launch 之後才取時間，會漏算 launch 期間（含建立 thread 本身）
     // 已經完成的工作。
