@@ -7,6 +7,13 @@
 #include "type.h"
 #include "quantum_function.h"
 
+// 每個執行緒共用一個 mt19937，只在第一次呼叫時用 random_device 建立並設定種子，
+// 避免每次呼叫 measure()/adjust_solution() 都重建 624 個 word 的引擎狀態。
+static std::mt19937& rng() {
+    static thread_local std::mt19937 gen(std::random_device{}());
+    return gen;
+}
+
 double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     double weights = 0;
@@ -29,11 +36,9 @@ double calculate_values(items_t& items, solution_t& solution) {
 
 solution_t measure(q_t& qindividuals) {
     solution_t solution;
-    std::random_device rd;  // 取得隨機數種子
-    std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
     for (int i=0; i<question_size; i++) {
-        std::uniform_real_distribution<double> dis(0.0, 1.0);
-        double rand_observation = dis(gen);
+        double rand_observation = dis(rng());
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
             solution.set(i, false);
         } else {
@@ -47,12 +52,10 @@ solution_t measure(q_t& qindividuals) {
 int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     // Adjust the solution to the capacity constraint
     double weights = calculate_weights(items, solution);
-    std::random_device rd;  // 取得隨機數種子
-    std::mt19937 gen(rd()); // 使用 Mersenne Twister 引擎
+    std::uniform_int_distribution<int> dis(0, question_size-1);
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
-        std::uniform_int_distribution<int> dis(0, question_size-1);
-        int rand_index = dis(gen);
+        int rand_index = dis(rng());
         if (!solution[rand_index]) {
             continue;
         }
