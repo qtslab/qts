@@ -23,18 +23,22 @@ sum(floor(w_i)·x_i) ≤ sum(w_i·x_i) ≤ C
 對 case_II / case_III（整數重量）`floor(w_i) = w_i`，仍為精確最佳解。
 詳見本檔最後與 `DP.hpp` 內註解。
 
-## 2. `adjust_solution` 只做溢出修復，未做 underfill
+## 2. `adjust_solution` 只做溢出修復，未做 underfill（這是設計的預期行爲，不是 bug）
 
 `src/quantum_function.cpp` 的 greedy 補滿段落被註解掉了。這是設計選擇而非
 bug，但代表解通常處於「未裝滿」狀態，完全依賴量子機率逼近，收斂較慢。
 若為刻意則無妨，僅記錄。
 
-## 3. 資源：一次啟動 1000 條 OS thread
+## 3. 資源：一次啟動 1000 條 OS thread（已修正）
 
-`src/main.cpp` 用 `std::thread threads[test_times]`（test_times = 1000）一次性
+`src/main.cpp` 原本用 `std::thread threads[test_times]`（test_times = 1000）一次性
 建立 1000 條執行緒，QTS / AE-QTS 各一輪。多數機器的實體核心遠少於此，會造成
-大量 context switch。非正確性問題，但若要乾淨的計時比較，建議改用執行緒池或
-限制併發數至核心數量級。
+大量 context switch，污染計時比較。
+
+**修正方向**：改用 `include/thread_pool.hpp` 的 `parallel_for`，以
+`std::thread::hardware_concurrency()`（偵測失敗退回 1）數量的 worker thread
+動態搶單跑完 test_times 次 run。各 run 寫入不同的 `records[i]`、彼此獨立，
+故無需鎖。
 
 ## 4. 微小效能點（非 bug）
 
