@@ -9,6 +9,7 @@
 #include "type.h"
 
 #include "case.hpp"
+#include "thread_pool.hpp"
 
 #include "QTS.hpp"
 #include "AE-QTS.hpp"
@@ -33,34 +34,28 @@ int main(int argc, char* argv[]) {
     auto DP_end = std::chrono::high_resolution_clock::now();
     std::cout << "DP optimal:  " << DP_optimal << std::endl << std::endl;
 
-    std::thread threads[test_times];
+    // 用與硬體邏輯執行緒數相同的 worker thread 跑完 test_times 次 run，
+    // 避免一次性開 test_times 條 OS thread 造成的 context switch 開銷。
+    const unsigned num_threads = hardware_threads();
+    std::cout << "worker threads: " << num_threads << std::endl << std::endl;
     // 維度是 [run][gen]：外層每條 run（test_times）各一個 vector，
     // 內層存該 run 每一代（max_gen）的紀錄。寫入端（record[gen]）與
     // 輸出端（records[run][gen]）都依此索引，故外層須為 test_times、內層 max_gen。
     std::vector<std::vector<double>> QTS_records(test_times, std::vector<double>(max_gen));
     std::vector<std::vector<double>> AE_QTS_records(test_times, std::vector<double>(max_gen));
-    // start 必須放在 launch 迴圈之前：thread 一建立就開始執行，
-    // 若放在 launch 之後才取時間，會漏算 launch 期間（含建立 thread 本身）
-    // 已經完成的工作。
+    // start 必須放在派工之前：worker 一建立就開始執行，若放在之後才取時間，
+    // 會漏算建立 thread 與已完成工作的時間。
     auto QTS_start = std::chrono::high_resolution_clock::now();
-    for (int i=0; i<test_times; i++) {
-        threads[i] = std::thread(QTS, std::ref(items), capacity, max_gen, N, std::ref(QTS_records[i]));
-    }
-
-    for (int i=0; i<test_times; i++) {
-        threads[i].join();
-    }
+    parallel_for(test_times, num_threads, [&](int i) {
+        QTS(items, capacity, max_gen, N, QTS_records[i]);
+    });
 
     auto QTS_end = std::chrono::high_resolution_clock::now();
 
     auto AE_QTS_start = std::chrono::high_resolution_clock::now();
-    for (int i=0; i<test_times; i++) {
-        threads[i] = std::thread(AE_QTS, std::ref(items), capacity, max_gen, N, std::ref(AE_QTS_records[i]));
-    }
-
-    for (int i=0; i<test_times; i++) {
-        threads[i].join();
-    }
+    parallel_for(test_times, num_threads, [&](int i) {
+        AE_QTS(items, capacity, max_gen, N, AE_QTS_records[i]);
+    });
 
     auto AE_QTS_end = std::chrono::high_resolution_clock::now();
 
