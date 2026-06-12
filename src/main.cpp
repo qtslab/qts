@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     print_items(items);
     std::cout << std::endl << "Max generation: " << max_gen << std::endl << std::endl;
 
-    // DP baseline：求精確（整數重量）/ 近似（實數重量）最佳解，作為收斂對照線
+    // DP baseline：求精確（整數重量）/ 有效上界（實數重量）最佳解，作為收斂對照線
     auto DP_start = std::chrono::high_resolution_clock::now();
     double DP_optimal = DP(items, capacity);
     auto DP_end = std::chrono::high_resolution_clock::now();
