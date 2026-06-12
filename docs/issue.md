@@ -40,11 +40,27 @@ bug，但代表解通常處於「未裝滿」狀態，完全依賴量子機率�
 動態搶單跑完 test_times 次 run。各 run 寫入不同的 `records[i]`、彼此獨立，
 故無需鎖。
 
-## 4. 微小效能點（非 bug）
+## 4. 微小效能點（實測後判定不修改）
 
-- `measure()` 每次呼叫都重建 `std::uniform_real_distribution`（無狀態，可提到
-  迴圈外或設為 static）。
+原本懷疑這兩處每次呼叫重建分布物件會拖慢效能：
+
+- `measure()` 每次呼叫都重建 `std::uniform_real_distribution`。
 - `adjust_solution()` 的 `std::uniform_int_distribution` 同理。
+
+**實測結論：不應修改。** 把兩者改成 `static thread_local` 後，以 HEAD 為對照、
+兩版二進位**交替順序**跑 8 輪（抵銷熱漂移）量測：
+
+| 版本 | QTS | AE-QTS |
+| ---- | --- | ------ |
+| 原本（區域變數，每次建立） | 8998 ms | 10772 ms |
+| 改成 `static thread_local` | 9215 ms | 11092 ms |
+
+改完反而**慢約 2–3%**，且幾乎每一輪配對都是改後較慢，是訊號不是雜訊。
+
+原因：`uniform_real_distribution` / `uniform_int_distribution` 的建構極廉價
+（只在 stack 上存兩個參數、無配置），本來就沒東西可省；改成 `static thread_local`
+卻讓每次呼叫都要做一次初始化 guard 檢查（分支 + TLS 存取），而 measure /
+adjust 全程被呼叫約 10⁷ 次，guard 成本反而超過原本的建構成本。故維持原樣。
 
 ## 已確認沒問題
 
