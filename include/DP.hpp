@@ -5,7 +5,6 @@
 #include <cmath>
 #include <algorithm>
 
-#include "constant.h"
 #include "type.h"
 
 // 以動態規劃求 0/1 背包的最佳解，作為 QTS / AE-QTS 收斂結果的 baseline。
@@ -28,7 +27,7 @@ double DP(items_t& items, double capacity) {
     }
 
     std::vector<double> dp(C + 1, 0.0);
-    for (int i=0; i<question_size; i++) {
+    for (std::size_t i=0; i<items.size(); i++) {
         int w = static_cast<int>(std::floor(items[i].weight));
         double v = items[i].value;
         if (w <= 0) {

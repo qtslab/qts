@@ -6,14 +6,13 @@
 #include <vector>
 #include <fstream>
 
-#include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
 #include "debug.hpp"
 #include "record.hpp"
 
 int TS(items_t& items, double capacity, int max_gen, int N, std::vector<double>& record) {
-    q_t qindividuals(question_size);
+    q_t qindividuals(items.size());
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
     std::vector<solution_t> neighbors(N); // neighbors in loop

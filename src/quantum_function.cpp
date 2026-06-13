@@ -3,7 +3,6 @@
 #include <vector>
 #include <algorithm>
 
-#include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
 
@@ -17,7 +16,7 @@ static std::mt19937& rng() {
 double calculate_weights(items_t& items, solution_t& solution) {
     // Calculate the weights of the solution
     double weights = 0;
-    for (int i=0; i<question_size; i++) {
+    for (std::size_t i=0; i<items.size(); i++) {
         weights += items[i].weight * solution[i];
     }
 
@@ -27,7 +26,7 @@ double calculate_weights(items_t& items, solution_t& solution) {
 double calculate_values(items_t& items, solution_t& solution) {
     // Calculate the values of the solution
     double values = 0;
-    for (int i=0; i<question_size; i++) {
+    for (std::size_t i=0; i<items.size(); i++) {
         values += items[i].value * solution[i];
     }
 
@@ -35,9 +34,9 @@ double calculate_values(items_t& items, solution_t& solution) {
 }
 
 solution_t measure(q_t& qindividuals) {
-    solution_t solution;
+    solution_t solution(qindividuals.size());
     std::uniform_real_distribution<double> dis(0.0, 1.0);
-    for (int i=0; i<question_size; i++) {
+    for (std::size_t i=0; i<qindividuals.size(); i++) {
         double rand_observation = dis(rng());
         if (rand_observation > (qindividuals[i].beta * qindividuals[i].beta)) {
             solution.set(i, false);
@@ -52,7 +51,7 @@ solution_t measure(q_t& qindividuals) {
 int adjust_solution(items_t& items, solution_t& solution, double capacity) {
     // Adjust the solution to the capacity constraint
     double weights = calculate_weights(items, solution);
-    std::uniform_int_distribution<int> dis(0, question_size-1);
+    std::uniform_int_distribution<int> dis(0, static_cast<int>(solution.size())-1);
     while (weights > capacity) { // overfilled
         // randomly remove an item from the solution until fit the capacity
         int rand_index = dis(rng());
@@ -83,7 +82,7 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals) {
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
     const double theta = 0.01 * M_PI;
-    for (int i=0; i<question_size; i++) {
+    for (std::size_t i=0; i<qindividuals.size(); i++) {
         int  mod_signal = best_sol[i] - worst_sol[i];
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree
@@ -103,7 +102,7 @@ int update_q(solution_t& best_sol, solution_t& worst_sol, q_t& qindividuals, dou
     // Update the qubits popolation applying the quantum gate on each qubit
     // The movement is not made for those qubits on the tabu list
     const double theta = angle * M_PI;
-    for (int i=0; i<question_size; i++) {
+    for (std::size_t i=0; i<qindividuals.size(); i++) {
         int mod_signal = best_sol[i] - worst_sol[i];
         if (qindividuals[i].alpha * qindividuals[i].beta < 0) {
             mod_signal *= -1; // fix answer to 0~90 degree

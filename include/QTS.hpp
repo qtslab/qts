@@ -6,20 +6,19 @@
 #include <vector>
 #include <fstream>
 
-#include "constant.h"
 #include "type.h"
 #include "quantum_function.h"
 #include "debug.hpp"
 #include "record.hpp"
 
 int QTS(items_t& items, double capacity, int max_gen, int N, std::vector<double>& record) {
-    q_t qindividuals(question_size);
+    q_t qindividuals(items.size());
     solution_t best_fit = measure(qindividuals);
     adjust_solution(items, best_fit, capacity);
     double best_fit_value = calculate_values(items, best_fit); // fitness 在 repair 後算一次後快取
     std::vector<solution_t> neighbors(N); // neighbors in loop
-    solution_t best_solution(question_size); // best solution in loop(one iteration)
-    solution_t worst_solution(question_size); // worst solution in loop(one iteration)
+    solution_t best_solution(items.size()); // best solution in loop(one iteration)
+    solution_t worst_solution(items.size()); // worst solution in loop(one iteration)
     for (int i=0; i<max_gen; i++) { // QTS_loop, i = t
         // std::cout << "QTS_loop: " << i << std::endl; // debug
         double best_value = 0, worst_value = 0;

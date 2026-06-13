@@ -34,17 +34,31 @@ cmake --build build
 ### 執行
 
 ```bash
-./build/qts
+./build/qts                 # 預設讀取 ./config/case.conf
+./build/qts path/to/my.conf # 也可指定其他設定檔
 ```
 
 ### 修改參數
 
-除了旋轉角度外的參數都可以在 `/include/constant.cpp` 中修改，
-修改完畢請重新編譯。
+`N`、`max_gen`、`question_size`、`test_times`、`min_weight`、`max_weight` 等參數
+都集中在 `config/case.conf`，格式為 `key = value`（`#` 之後為註解）。
+**修改後直接重新執行即可生效，不需重新編譯。**
+
+```conf
+N = 10              # Neighbourhood size（鄰域大小）
+min_weight = 1.0    # 物品重量下界（case_I 使用）
+max_weight = 10.0   # 物品重量上界（case_I 使用）
+max_gen = 1000      # 迭代代數 NumIter
+question_size = 1000 # 物品數量 n_items
+test_times = 1000   # 重複執行次數（取平均）
+```
+
+找不到設定檔時會印出警告並沿用內建預設值（見 `include/config.hpp` 的 `Config`）。
 
 如果要修改不同的 case 來執行，
 請到 `/src/main.cpp` 中的函式修改，
-例如 `case_III(items, capacity, max_gen, N);`。
+例如把 `case_I(items, capacity, cfg.min_weight, cfg.max_weight);`
+換成 `case_II(items, capacity);` 或 `case_III(items, capacity);`。
 
 要修改旋轉角度的話，
 QTS 呼叫的是在 `/src/quantum_function.cpp` 中使用多載的 `updateQ()` 函式(三個參數，參數中不含角度)，

@@ -5,7 +5,7 @@
 #include <thread>
 #include <fstream>
 
-#include "constant.h"
+#include "config.hpp"
 #include "type.h"
 
 #include "case.hpp"
@@ -16,10 +16,18 @@
 #include "DP.hpp"
 
 int main(int argc, char* argv[]) {
-    items_t items;
+    // 參數一律由設定檔讀入（預設 config/case.conf，可由第一個命令列引數覆寫），
+    // 調整參數不需重新編譯。
+    const std::string config_path = (argc > 1) ? argv[1] : "config/case.conf";
+    const Config cfg = load_config(config_path);
+    const int N = cfg.N;
+    const int max_gen = cfg.max_gen;
+    const int test_times = cfg.test_times;
+
+    items_t items(cfg.question_size);
     double capacity = 0;
     // Case start
-    case_I(items, capacity, max_gen, N); // set case
+    case_I(items, capacity, cfg.min_weight, cfg.max_weight); // set case
     // case end
 
     // print the items and capacity
