@@ -16,7 +16,6 @@ struct Config {
     double max_weight = 10.0;
     int max_gen = 1000;          // NumIter
     int question_size = 1000;    // n_items
-    int test_times = 1000;
 };
 
 // 解析 "key = value" 格式的設定檔，'#' 之後視為註解，空白行略過。
@@ -72,8 +71,6 @@ inline Config load_config(const std::string& path) {
             vs >> cfg.max_gen;
         } else if (key == "question_size") {
             vs >> cfg.question_size;
-        } else if (key == "test_times") {
-            vs >> cfg.test_times;
         } else {
             std::cerr << "warning: unknown config key '" << key << "' ignored" << std::endl;
         }

@@ -27,20 +27,28 @@ QTS：
 ### 編譯
 
 ```bash
-cmake -B build
+cmake -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build
 ```
+
+QTS 與 AE-QTS 各自編譯成一支獨立執行檔（`build/qts`、`build/ae_qts`），
+共用的量子運算邏輯收在靜態函式庫 `qts_core`。拆開的目的是讓兩者的執行時間
+可以用 shell 的 `time` 個別量測，方便和 GPU 版本做時間比較。
 
 ### 執行
 
 ```bash
-./build/qts                 # 預設讀取 ./config/case.conf
-./build/qts path/to/my.conf # 也可指定其他設定檔
+./build/qts                    # QTS，預設讀取 ./config/case.conf
+./build/ae_qts                 # AE-QTS
+./build/qts path/to/my.conf    # 也可指定其他設定檔
 ```
+
+每支執行檔跑「一次」該演算法並輸出收斂曲線 CSV。程式本身**不做計時、也不做重複**：
+要量時間或重複多次，請用 `script/benchmark.sh`（內含 `time` 與 `for` 迴圈）。
 
 ### 修改參數
 
-`N`、`max_gen`、`question_size`、`test_times`、`min_weight`、`max_weight` 等參數
+`N`、`max_gen`、`question_size`、`min_weight`、`max_weight` 等參數
 都集中在 `config/case.conf`，格式為 `key = value`（`#` 之後為註解）。
 **修改後直接重新執行即可生效，不需重新編譯。**
 
@@ -50,30 +58,46 @@ min_weight = 1.0    # 物品重量下界（case_I 使用）
 max_weight = 10.0   # 物品重量上界（case_I 使用）
 max_gen = 1000      # 迭代代數 NumIter
 question_size = 1000 # 物品數量 n_items
-test_times = 1000   # 重複執行次數（取平均）
 ```
+
+重複次數不再是參數：每次執行就是跑一次，要重複幾次交給 `script/benchmark.sh` 的
+`for` 迴圈決定。
 
 找不到設定檔時會印出警告並沿用內建預設值（見 `include/config.hpp` 的 `Config`）。
 
 如果要修改不同的 case 來執行，
-請到 `/src/main.cpp` 中的函式修改，
+請到 `/include/experiment.hpp` 的 `run_experiment()` 中修改，
 例如把 `case_I(items, capacity, cfg.min_weight, cfg.max_weight);`
 換成 `case_II(items, capacity);` 或 `case_III(items, capacity);`。
+此處為 QTS 與 AE-QTS 兩支執行檔共用的實驗流程，改一次兩邊同步生效。
 
 要修改旋轉角度的話，
 QTS 呼叫的是在 `/src/quantum_function.cpp` 中使用多載的 `updateQ()` 函式(三個參數，參數中不含角度)，
 AE-QTS 的 `updateQ()` 函式也在相同檔案中，使用多載的 `updateQ()` 函式(四個參數，參數中含角度)。
 
+### 計時（和 GPU 版本比較）
+
+計時不再寫在程式裡，改用 `script/benchmark.sh`，以 shell 的 `time` 搭配 `for`
+迴圈分別量測 `build/qts`、`build/ae_qts` 整支執行檔的牆鐘時間，並重複數次取平均。
+這樣量到的就是「一支執行檔從頭到尾」的時間，和 GPU 版本用外部計時的方式一致。
+
+```bash
+script/benchmark.sh                      # 預設 config/case.conf，每支重複 5 次
+script/benchmark.sh config/case.conf 10  # 指定設定檔與重複次數
+```
+
 ### 輸出檔案
 
-輸出檔案為 `./csv/QTS.csv`，
+兩支執行檔各自輸出一份 CSV：
+QTS 寫到 `./csv/QTS.csv`，AE-QTS 寫到 `./csv/AE-QTS.csv`。
+每份 CSV：
 第一欄為代數，
-第二欄為 QTS 目前找到的最佳解，
-第三欄為 AE-QTS 目前找到的最佳解，
-第四欄為 DP 求得的最佳解（baseline，每代皆相同，於圖表中為一條水平基準線）。
+第二欄為該演算法該代目前找到的最佳解（單次執行），
+第三欄為 DP 求得的最佳解（baseline，每代皆相同，於圖表中為一條水平基準線）。
 
-可使用圖表功能生成圖表，
-對比執行結果的收斂速度和最佳解。
+兩份 CSV 的物品為各自隨機生成（case_I／case_II）。若要在同一組物品上比較
+兩者的收斂曲線，請改用資料固定的 `case_III`。
+可使用圖表功能生成圖表，對比執行結果的收斂速度和最佳解。
 
 ### DP baseline
 
@@ -95,24 +119,22 @@ AE-QTS 的 `updateQ()` 函式也在相同檔案中，使用多載的 `updateQ()`
 
 ### 速度
 
-相較於 Python 版本，
-C++ 版本的程式執行速度較快，
-同時我使用 thread 來讓測試可以一次使用多個執行緒，
-不僅單個測試比起 Python 版本快了許多，
-可以完整發揮 CPU 性能讓處理器使用率達到 100%，
-藉此再進一步提升約 20~30 倍的執行速度，
-如果核心數更高則可以省下更多時間。
+相較於 Python 版本，C++ 版本的程式執行速度較快。
+每支執行檔跑一次演算法，時間量測與重複都交給 `script/benchmark.sh`
+（shell 的 `time` ＋ `for` 迴圈），量到的就是單次執行從頭到尾的牆鐘時間，
+和 GPU 版本用外部計時的方式一致，方便直接對照。
 
 ## 比較
 
 測試條件：`question_size = 1000`（物品數）、`max_gen = 1000`（迭代數）、
-`N = 10`（鄰域大小）、`test_times = 1000`（重複次數，以多執行緒平行執行）。
-`time` 為 `test_times` 次測試平行執行完的總牆鐘時間；
-`answer` 為第 `max_gen` 代時，`test_times` 次測試找到的最佳解之平均值
-（即 `./csv/QTS.csv` 最後一列）；
+`N = 10`（鄰域大小）。
+`time` 為以 `script/benchmark.sh` 量測單次執行的牆鐘時間（多次取平均）；
+`answer` 為第 `max_gen` 代找到的最佳解（即 `./csv/QTS.csv` 最後一列第二欄）；
 `space` 為單條 run 在執行期間持有的資料結構量級。
 Case I、Case II 的物品為隨機生成，數值為某次代表性執行的結果，會隨機略有浮動；
 Case III 為固定資料，結果穩定。
+（下表 `time` 與 `answer` 為先前多次平行版本的代表值，改成單次執行後絕對數字會變，
+相對關係——AE-QTS 略慢、解略好——不變。）
 
 | CASE I    | QTS                  | AE-QTS               |
 | --------- | -------------------- | -------------------- |

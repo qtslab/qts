@@ -77,3 +77,11 @@ auto QTS_end = std::chrono::high_resolution_clock::now();
 
 漏算的時間約 0.4～0.5 s，對應建立 1000 條 thread 與先啟動者在 launch 期間
 已完成的工作。修正後的數字才是公平的 baseline。
+
+## 後記：計時已移出程式
+
+為了方便和 GPU 版本做時間比較，程式內建的 `std::chrono` 計時已整個移除，
+QTS / AE-QTS 也拆成兩支獨立執行檔（`build/qts`、`build/ae_qts`）。
+現在改用 `script/benchmark.sh`，以 shell 的 `time` 搭配 `for` 迴圈分別量測整支執行檔的
+牆鐘時間並重複取平均——量到的範圍與本文「修正後」一致（涵蓋建立 thread →
+全部 join 完），只是計時器從程式內移到了程式外。
